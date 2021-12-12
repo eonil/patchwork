@@ -49,18 +49,19 @@ final class PieceTest: XCTestCase {
     }
     func testFixedSizedStack() throws {
         let spec = Stack(axis: .horizontal, subpieces: [
-            Space(layout: Layout(defaultWidth: 10, defaultHeight: 20)),
-            Space(layout: Layout(defaultWidth: 100, defaultHeight: 200)),
+            Space(id: "AAA", layout: Layout(defaultWidth: 10, defaultHeight: 20)),
+            Space(id: "BBB", layout: Layout(defaultWidth: 100, defaultHeight: 200)),
         ])
         let view = PieceView(with: spec)
-        print(view.sizeThatFits(.zero))
-//        guard view.sizeThatFits(.zero) == .init(width: 110, height: 200) else { return XCTFail() }
-//        guard view.subviews.count == 1 else { return XCTFail() }
-//        guard let x = view.subviews[0] as? PieceStackView else { return XCTFail() }
-//        guard x.axis == .horizontal else { return XCTFail() }
-//        guard x.subviews.count == 2 else { return XCTFail() }
-//        guard let x1 = x.subviews[0] as? PieceSpaceView else { return XCTFail() }
-//        guard let x2 = x.subviews[1] as? PieceSpaceView else { return XCTFail() }
+        guard view.systemLayoutSizeFitting(.zero) == .init(width: 110, height: 200) else { return XCTFail() }
+        guard view.subviews.count == 1 else { return XCTFail() }
+        guard let x = view.subviews[0] as? PieceStackView else { return XCTFail() }
+        guard x.axis == .horizontal else { return XCTFail() }
+        guard x.subviews.count == 2 else { return XCTFail() }
+        guard let x1 = x.subviews[0] as? PieceSpaceView else { return XCTFail() }
+        guard let x2 = x.subviews[1] as? PieceSpaceView else { return XCTFail() }
+        guard x1.piece.id == AnyHashable("AAA") else { return XCTFail() }
+        guard x2.piece.id == AnyHashable("BBB") else { return XCTFail() }
     }
 }
 #endif

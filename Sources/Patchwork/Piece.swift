@@ -25,12 +25,13 @@ public extension Layout {
             return z
         }
         var cs = [NSLayoutConstraint]()
-        if let x = defaultWidth { cs.append(constrain(.width, .equal, x, .defaultHigh)) }
-        if let x = defaultHeight { cs.append(constrain(.height, .equal, x, .defaultHigh)) }
-        if let x = minWidth { cs.append(constrain(.width, .greaterThanOrEqual, x, .defaultHigh)) }
-        if let x = minHeight { cs.append(constrain(.height, .greaterThanOrEqual, x, .defaultHigh)) }
-        if let x = maxWidth { cs.append(constrain(.width, .lessThanOrEqual, x, .defaultHigh)) }
-        if let x = maxHeight { cs.append(constrain(.height, .lessThanOrEqual, x, .defaultHigh)) }
+        let p = UILayoutPriority.required - 1
+        if let x = defaultWidth { cs.append(constrain(.width, .equal, x, p)) }
+        if let x = defaultHeight { cs.append(constrain(.height, .equal, x, p)) }
+        if let x = minWidth { cs.append(constrain(.width, .greaterThanOrEqual, x, p)) }
+        if let x = minHeight { cs.append(constrain(.height, .greaterThanOrEqual, x, p)) }
+        if let x = maxWidth { cs.append(constrain(.width, .lessThanOrEqual, x, p)) }
+        if let x = maxHeight { cs.append(constrain(.height, .lessThanOrEqual, x, p)) }
         return cs
     }
 }

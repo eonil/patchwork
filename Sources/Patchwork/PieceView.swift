@@ -9,24 +9,34 @@ import UIKit
 ///   - Otherwise, existing instance will be deleted and a new one will be created.
 ///   - ID and version will not be considered in continuity comparison if set to `nil`.
 public final class PieceView: UIView {
-    private var root = PieceStackView() as PieceNodeView
-    private var viewTable = [AnyHashable: PieceNodeView]()
+    private var root = PieceSpaceView() as PieceNodeView
+    private var localConstraints = [NSLayoutConstraint]()
     public convenience init(with p:Piece) {
         self.init()
         addSubview(root)
         piece = p
     }
     public func view(for id:AnyHashable) -> UIView? {
-        viewTable[id]
+        root.findView(for: id)
     }
     var piece: Piece {
         get { root.piece }
         set(p) {
-            let newRoot = rendered(p, onto: root, with: &viewTable)
+            let newRoot = rendered(p, onto: root)
             if newRoot !== root {
+                NSLayoutConstraint.deactivate(localConstraints)
+                localConstraints.removeAll()
                 root.removeFromSuperview()
                 root = newRoot
                 addSubview(root)
+                root.translatesAutoresizingMaskIntoConstraints = false
+                localConstraints = [
+                    root.leadingAnchor.constraint(equalTo: leadingAnchor),
+                    root.trailingAnchor.constraint(equalTo: trailingAnchor),
+                    root.topAnchor.constraint(equalTo: topAnchor),
+                    root.bottomAnchor.constraint(equalTo: bottomAnchor),
+                ]
+                NSLayoutConstraint.activate(localConstraints)
             }
         }
     }
@@ -35,7 +45,7 @@ public final class PieceView: UIView {
 /// Renderes a piece to onto current view.
 /// - If current view is a proper type view, current view will be rendered and returned.
 /// - If current view is not proper type view, a new view will be created, rendered and returned.
-private func rendered(_ p:Piece, onto v:PieceNodeView?, with table: inout [AnyHashable:PieceNodeView]) -> PieceNodeView {
+private func rendered(_ p:Piece, onto v:PieceNodeView?) -> PieceNodeView {
     let vty = matchingViewType(for: p)
     let v = { () -> PieceNodeView in
         if let v = v {
@@ -49,9 +59,6 @@ private func rendered(_ p:Piece, onto v:PieceNodeView?, with table: inout [AnyHa
         if needsDataReassignment(old: v.source, new: p) {
             v.source = p
         }
-        if let id = p.id {
-            table[id] = v
-        }
         return v
     }
     if let p = p as? Color {
@@ -60,9 +67,6 @@ private func rendered(_ p:Piece, onto v:PieceNodeView?, with table: inout [AnyHa
         if needsDataReassignment(old: v.source, new: p) {
             v.source = p
             v.backgroundColor = p.content
-        }
-        if let id = p.id {
-            table[id] = v
         }
         return v
     }
@@ -73,9 +77,6 @@ private func rendered(_ p:Piece, onto v:PieceNodeView?, with table: inout [AnyHa
             v.source = p
             v.attributedText = p.spawn()
         }
-        if let id = p.id {
-            table[id] = v
-        }
         return v
     }
     if let p = p as? Image {
@@ -84,9 +85,6 @@ private func rendered(_ p:Piece, onto v:PieceNodeView?, with table: inout [AnyHa
         if needsDataReassignment(old: v.source, new: p) {
             v.source = p
             v.image = p.content
-        }
-        if let id = p.id {
-            table[id] = v
         }
         return v
     }
@@ -99,13 +97,11 @@ private func rendered(_ p:Piece, onto v:PieceNodeView?, with table: inout [AnyHa
             }
             v.source = p
             v.axis = p.axis
+            v.alignment = .center
             for sp in p.subpieces {
-                let sv = rendered(sp, onto: nil, with: &table)
+                let sv = rendered(sp, onto: nil)
                 v.addArrangedSubview(sv)
             }
-        }
-        if let id = p.id {
-            table[id] = v
         }
         return v
     }
