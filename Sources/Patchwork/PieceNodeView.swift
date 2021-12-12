@@ -20,6 +20,23 @@ extension PieceNodeView {
     }
 }
 
+final class PieceSpaceView: UIView, PieceNodeView {
+    private var localConstraints = [NSLayoutConstraint]()
+    var source = Space() {
+        didSet(old) {
+            if old.layout != source.layout {
+                NSLayoutConstraint.deactivate(localConstraints)
+                localConstraints = source.layout.spawn(for: self)
+                NSLayoutConstraint.activate(localConstraints)
+            }
+        }
+    }
+    
+    convenience init() {
+        self.init(frame: .zero)
+    }
+    var piece: Piece { source }
+}
 final class PieceColorView: UIView, PieceNodeView {
     private var localConstraints = [NSLayoutConstraint]()
     var source = Color(content: .clear) {
@@ -33,7 +50,7 @@ final class PieceColorView: UIView, PieceNodeView {
     }
     
     convenience init() {
-        self.init()
+        self.init(frame: .zero)
     }
     var piece: Piece { source }
 }
@@ -51,7 +68,7 @@ final class PieceImageView: UIImageView, PieceNodeView {
     }
     
     convenience init() {
-        self.init()
+        self.init(frame: .zero)
     }
     var piece: Piece { source }
 }
@@ -69,7 +86,7 @@ final class PieceTextView: UITextView, PieceNodeView {
     }
     
     convenience init() {
-        self.init()
+        self.init(frame: .zero)
     }
     var piece: Piece { source }
 }
@@ -87,7 +104,7 @@ final class PieceStackView: UIStackView, PieceNodeView {
     }
     
     convenience init() {
-        self.init()
+        self.init(frame: .zero)
     }
     var piece: Piece { source }
 }
@@ -105,7 +122,7 @@ final class PieceListView: UIStackView, PieceNodeView {
     }
     
     convenience init() {
-        self.init()
+        self.init(frame: .zero)
     }
     var piece: Piece { source }
 }

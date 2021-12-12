@@ -11,9 +11,10 @@ import UIKit
 public final class PieceView: UIView {
     private var root = PieceStackView() as PieceNodeView
     private var viewTable = [AnyHashable: PieceNodeView]()
-    public convenience init(source:Piece) {
+    public convenience init(with p:Piece) {
         self.init()
         addSubview(root)
+        piece = p
     }
     public func view(for id:AnyHashable) -> UIView? {
         viewTable[id]
@@ -24,6 +25,7 @@ public final class PieceView: UIView {
             let newRoot = rendered(p, onto: root, with: &viewTable)
             if newRoot !== root {
                 root.removeFromSuperview()
+                root = newRoot
                 addSubview(root)
             }
         }
@@ -41,9 +43,21 @@ private func rendered(_ p:Piece, onto v:PieceNodeView?, with table: inout [AnyHa
         }
         return vty.init()
     }()
+    if let p = p as? Space {
+        var v = v as! PieceSpaceView
+        if needsObjectReinstantiation(old: v.source, new: p) { v = .init() }
+        if needsDataReassignment(old: v.source, new: p) {
+            v.source = p
+        }
+        if let id = p.id {
+            table[id] = v
+        }
+        return v
+    }
     if let p = p as? Color {
-        let v = v as! PieceColorView
-        if v.source.id != p.id || v.source.version != p.version {
+        var v = v as! PieceColorView
+        if needsObjectReinstantiation(old: v.source, new: p) { v = .init() }
+        if needsDataReassignment(old: v.source, new: p) {
             v.source = p
             v.backgroundColor = p.content
         }
@@ -53,49 +67,65 @@ private func rendered(_ p:Piece, onto v:PieceNodeView?, with table: inout [AnyHa
         return v
     }
     if let p = p as? Text {
-        let v = v as! PieceTextView
-        if v.source.id != p.id || v.source.version != p.version {
+        var v = v as! PieceTextView
+        if needsObjectReinstantiation(old: v.source, new: p) { v = .init() }
+        if needsDataReassignment(old: v.source, new: p) {
             v.source = p
             v.attributedText = p.spawn()
         }
         if let id = p.id {
             table[id] = v
         }
+        return v
     }
     if let p = p as? Image {
-        let v = v as! PieceImageView
-        if v.source.id != p.id || v.source.version != p.version {
+        var v = v as! PieceImageView
+        if needsObjectReinstantiation(old: v.source, new: p) { v = .init() }
+        if needsDataReassignment(old: v.source, new: p) {
             v.source = p
             v.image = p.content
         }
         if let id = p.id {
             table[id] = v
         }
+        return v
     }
     if let p = p as? Stack {
-        let v = v as! PieceStackView
-        if v.source.id != p.id || v.source.version != p.version {
-            v.setSubviews([])
+        var v = v as! PieceStackView
+        if needsObjectReinstantiation(old: v.source, new: p) { v = .init() }
+        if needsDataReassignment(old: v.source, new: p) {
+            for sv in v.arrangedSubviews {
+                v.removeArrangedSubview(sv)
+            }
             v.source = p
             v.axis = p.axis
             for sp in p.subpieces {
                 let sv = rendered(sp, onto: nil, with: &table)
-                v.addSubview(sv)
+                v.addArrangedSubview(sv)
             }
         }
         if let id = p.id {
             table[id] = v
         }
+        return v
     }
     fatalError("Unknown type piece.")
 }
 
 private func matchingViewType(for p:Piece) -> PieceNodeView.Type {
+    if p is Space { return PieceSpaceView.self }
     if p is Color { return PieceColorView.self }
     if p is Text { return PieceTextView.self }
     if p is Image { return PieceImageView.self }
     if p is Stack { return PieceStackView.self }
     if p is List { return PieceListView.self }
     fatalError("Cannot find a matching view type for the piece.")
+}
+private func needsObjectReinstantiation(old a:Piece, new b:Piece) -> Bool {
+    if let id1 = a.id, let id2 = b.id, id1 != id2 { return true }
+    return false
+}
+private func needsDataReassignment(old a:Piece, new b:Piece) -> Bool {
+    a.id == nil || b.id == nil || !(a.version != nil && b.version != nil && a.version == b.version)
 }
 #endif
