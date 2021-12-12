@@ -1,0 +1,18 @@
+// swift-tools-version:5.5
+// The swift-tools-version declares the minimum version of Swift required to build this package.
+
+import PackageDescription
+
+let package = Package(
+    name: "Patchwork",
+    platforms: [
+        .iOS(.v13),
+    ],
+    products: [
+        .library(name: "Patchwork", targets: ["Patchwork"]),
+    ],
+    targets: [
+        .target(name: "Patchwork", dependencies: []),
+        .testTarget(name: "PatchworkTest", dependencies: ["Patchwork"]),
+    ]
+)
