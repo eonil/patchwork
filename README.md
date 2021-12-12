@@ -4,6 +4,7 @@ Patchwork
 
 Minimal declarative layout library for UIKit.
 
+[![CI](https://github.com/eonil/patchwork/actions/workflows/main.yml/badge.svg)](https://github.com/eonil/patchwork/actions/workflows/main.yml)
 
 
 Why?
