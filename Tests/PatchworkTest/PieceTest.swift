@@ -1,5 +1,6 @@
 #if canImport(UIKit)
 import XCTest
+import SnapshotTesting
 @testable import Patchwork
 
 final class PieceTest: XCTestCase {
@@ -28,7 +29,9 @@ final class PieceTest: XCTestCase {
         guard let c1 = c.subviews[0] as? PieceColorView else { return XCTFail() }
         guard let c2 = c.subviews[1] as? PieceTextView else { return XCTFail() }
         guard c1.backgroundColor == UIColor.red else { return XCTFail() }
-        guard c2.attributedText.string == "AAA" else { return XCTFail() }
+        guard c2.attributedText?.string == "AAA" else { return XCTFail() }
+        b.frame.size = b.systemLayoutSizeFitting(.zero)
+        assertSnapshot(matching: b, as: .image)
     }
     func testNestedStack() throws {
         let a = Stack(axis: .vertical, subpieces: [

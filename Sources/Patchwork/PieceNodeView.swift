@@ -87,6 +87,7 @@ final class PieceTextView: UITextView, PieceNodeView {
     
     convenience init() {
         self.init(frame: .zero)
+        isScrollEnabled = false
     }
     var piece: Piece { source }
 }

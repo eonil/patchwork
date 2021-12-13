@@ -11,8 +11,11 @@ let package = Package(
     products: [
         .library(name: "Patchwork", targets: ["Patchwork"]),
     ],
+    dependencies: [
+        .package(name: "SnapshotTesting", url: "https://github.com/pointfreeco/swift-snapshot-testing", from: "1.9.0"),
+    ],
     targets: [
         .target(name: "Patchwork", dependencies: []),
-        .testTarget(name: "PatchworkTest", dependencies: ["Patchwork"]),
+        .testTarget(name: "PatchworkTest", dependencies: ["Patchwork","SnapshotTesting"], exclude: ["__Snapshots__"]),
     ]
 )
