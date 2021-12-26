@@ -37,22 +37,23 @@ public struct ColorPieceContent {
 /// Layout
 /// -------
 /// - Two type of segments. Rigid or flexible.
-/// - Size of rigid segment will be respected and kept.
+/// - Size of rigid segment is defined by *content*.
+///   - Defined size will be respected.
 ///   - Contents will underflow/overflow if container size is too small and if all segments are rigid.
-/// - Flexible segments will be stretched/shrunk up to container size.
-/// - Size of a stitch-view need to be set to its fitting-size to avoid content underflow/overflow.
+///   - Make container large enough to prevent content overflow/underflow.
+/// - Size of flexible segment is defined by *container*.
+///   - Flexible segments will be stretched/shrunk up to container size.
 ///
-/// - Segments with clearly defined size limits will not be stretched/shrunk.
-///   - Layout system will respect their defined size and try to keep it as much as possible.
-///   - If it's impossible to satisfy their defined size, layout system will issue a debug-time assertion failure, but keep running in release mode.
-/// - Size of a stitch view is defined by its content.
-/// - More flexibility is **not a goal**. Keep system simple as much as possible.
+/// Non-Goal
+/// -------
+/// - More feature is **not a goal**. Keep system simple as much as possible.
 ///   - If you need more flexibility, implement a custom layout view.
 ///
-/// Version-based update.
-/// -----------------
-/// - All stitches can provide a version.
-/// - Stitch view will update stitch contents only if their versions are different.
+/// Version-Based Resolution
+/// -------------------
+/// - All stitches/stacks provides a version-based subtree resolution skipping.
+/// - Subtrees will be resolved only if version has been changed.
+/// - Once resolved subtree can be laid out different ways for different frames.
 ///
 public struct Stitch {
     public var version: AnyHashable

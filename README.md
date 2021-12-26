@@ -16,14 +16,22 @@ I need something right now, that works flawlessly with UIKit and does not spit a
 `Patchwork` is for that needs.
 
 
-Subset
-------
-This does not aim to provide full features of UIKit or SwiftUI.
-This aims very small portion of the frameworks -- static information layout.
-Composition of space, color, text, image, button, stack and list.
-
 
 Manual Layout
 -------------
 Due to global effect of AutoLayout, it's difficult to manage them clean.
  
+
+
+Data Flow
+---------
+
+    Piece   ->   ResolvedPiece   ->   RenderingPieceLayout   ->   UIView/NSView
+
+- You build `Piece` tree.
+- You pass the `Piece` tree to a `PieceView`.
+- `PieceView` resolves `Piece` tree into `ResolvedPiece` tree.
+  - This tree exists only to support version-based resolution skipping.
+- Once resolved subtree can be used for final layout/rendering.
+- On layout (e.g. frame changed), `PieceView` produces `RenderingPieceLayout` tree from `ResolvedPiece` tree.
+- `PieceView` updates in-place or rebuilds view subtree to render `RenderingPieceLayout` tree. 
