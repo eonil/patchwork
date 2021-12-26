@@ -6,7 +6,7 @@ import SnapshotTesting
 final class PieceTest: XCTestCase {
     func testLeafResolutions() {
         do {
-            let p = Piece(sizing: .rigid, content: .space(.zero))
+            let p = Piece(sizing: .fitContent, content: .space(.zero))
             let p1 = ResolvedPiece(from: p)
             XCTAssertEqual(p1.sizing, p.sizing)
             XCTAssertEqual(p1.content.fittingSize, .zero)
@@ -14,7 +14,7 @@ final class PieceTest: XCTestCase {
             XCTAssertEqual(p2.frame, CGRect(x: 10 + 50, y: 20 + 100, width: 0, height: 0))
         }
         do {
-            let p = Piece(sizing: .rigid, content: .space(CGSize(width: 10, height: 10)))
+            let p = Piece(sizing: .fitContent, content: .space(CGSize(width: 10, height: 10)))
             let p1 = ResolvedPiece(from: p)
             XCTAssertEqual(p1.sizing, p.sizing)
             XCTAssertEqual(p1.content.fittingSize, CGSize(width: 10, height: 10))
@@ -22,7 +22,7 @@ final class PieceTest: XCTestCase {
             XCTAssertEqual(p2.frame, CGRect(x: 45, y: 45, width: 10, height: 10))
         }
         do {
-            let p = Piece(sizing: .flex, content: .space(.zero))
+            let p = Piece(sizing: .fillContainer, content: .space(.zero))
             let p1 = ResolvedPiece(from: p)
             XCTAssertEqual(p1.sizing, p.sizing)
             XCTAssertEqual(p1.content.fittingSize, .zero)
@@ -31,7 +31,7 @@ final class PieceTest: XCTestCase {
         }
         do {
             let v = FixedSizedView(frame: CGRect(x: 0, y: 0, width: 20, height: 40))
-            let p = Piece(sizing: .rigid, content: .view(v))
+            let p = Piece(sizing: .fitContent, content: .view(v))
             let p1 = ResolvedPiece(from: p)
             XCTAssertEqual(p1.sizing, p.sizing)
             XCTAssertEqual(p1.content.fittingSize, CGSize(width: 20, height: 40))
@@ -41,7 +41,7 @@ final class PieceTest: XCTestCase {
     }
     func testStitchResolution() {
         do {
-            let p = Piece(sizing: .rigid, content: .stitch(Stitch(version: 1, content: {
+            let p = Piece(sizing: .fitContent, content: .stitch(Stitch(version: 1, content: {
                 StitchContent(axis: .x, segments: [
                 ])
             })))
@@ -50,10 +50,10 @@ final class PieceTest: XCTestCase {
             XCTAssertEqual(p2.frame, CGRect(x: 10 + 50, y: 20 + 100, width: 0, height: 0))
         }
         do {
-            let p = Piece(sizing: .rigid, content: .stitch(Stitch(version: 1, content: {
+            let p = Piece(sizing: .fitContent, content: .stitch(Stitch(version: 1, content: {
                 StitchContent(axis: .x, segments: [
-                    Piece(sizing: .rigid, content: .color(ColorPieceContent(size: CGSize(width: 10, height: 20), color: .red))),
-                    Piece(sizing: .flex, content: .color(ColorPieceContent(size: .zero, color: .blue))),
+                    Piece(sizing: .fitContent, content: .color(ColorPieceContent(size: CGSize(width: 10, height: 20), color: .red))),
+                    Piece(sizing: .fillContainer, content: .color(ColorPieceContent(size: .zero, color: .blue))),
                 ])
             })))
             let p1 = ResolvedPiece(from: p)
@@ -61,10 +61,10 @@ final class PieceTest: XCTestCase {
             XCTAssertEqual(p2.frame, CGRect(x: 50 - 5, y: 100 - 10, width: 10, height: 20))
         }
         do {
-            let p = Piece(sizing: .flex, content: .stitch(Stitch(version: 1, content: {
+            let p = Piece(sizing: .fillContainer, content: .stitch(Stitch(version: 1, content: {
                 StitchContent(axis: .x, segments: [
-                    Piece(sizing: .rigid, content: .color(ColorPieceContent(size: CGSize(width: 10, height: 20), color: .red))),
-                    Piece(sizing: .flex, content: .color(ColorPieceContent(size: .zero, color: .blue))),
+                    Piece(sizing: .fitContent, content: .color(ColorPieceContent(size: CGSize(width: 10, height: 20), color: .red))),
+                    Piece(sizing: .fillContainer, content: .color(ColorPieceContent(size: .zero, color: .blue))),
                 ])
             })))
             let p1 = ResolvedPiece(from: p)
@@ -76,13 +76,13 @@ final class PieceTest: XCTestCase {
             XCTAssertEqual(x2[1].frame, CGRect(x: 10, y: 0, width: 90, height: 200))
         }
         do {
-            let p = Piece(sizing: .flex, content: .stitch(Stitch(version: 1, content: {
+            let p = Piece(sizing: .fillContainer, content: .stitch(Stitch(version: 1, content: {
                 StitchContent(axis: .x, segments: [
-                    Piece(sizing: .rigid, content: .color(ColorPieceContent(size: CGSize(width: 10, height: 20), color: .red))),
-                    Piece(sizing: .flex, content: .stitch(Stitch(version: 2, content: {
+                    Piece(sizing: .fitContent, content: .color(ColorPieceContent(size: CGSize(width: 10, height: 20), color: .red))),
+                    Piece(sizing: .fillContainer, content: .stitch(Stitch(version: 2, content: {
                         StitchContent(axis: .y, segments: [
-                            Piece(sizing: .flex, content: .color(ColorPieceContent(size: .zero, color: .green))),
-                            Piece(sizing: .flex, content: .color(ColorPieceContent(size: .zero, color: .blue))),
+                            Piece(sizing: .fillContainer, content: .color(ColorPieceContent(size: .zero, color: .green))),
+                            Piece(sizing: .fillContainer, content: .color(ColorPieceContent(size: .zero, color: .blue))),
                         ])
                     }))),
                 ])
@@ -102,10 +102,10 @@ final class PieceTest: XCTestCase {
     }
     func testStack() {
         do {
-            let p = Piece(sizing: .rigid, content: .stack(Stack(version: 1, content: { [
-                Piece(sizing: .rigid, content: .color(ColorPieceContent(size: CGSize(width: 20, height: 20), color: .red))),
-                Piece(sizing: .rigid, content: .color(ColorPieceContent(size: CGSize(width: 40, height: 40), color: .green))),
-                Piece(sizing: .rigid, content: .color(ColorPieceContent(size: CGSize(width: 60, height: 60), color: .blue))),
+            let p = Piece(sizing: .fitContent, content: .stack(Stack(version: 1, content: { [
+                Piece(sizing: .fitContent, content: .color(ColorPieceContent(size: CGSize(width: 20, height: 20), color: .red))),
+                Piece(sizing: .fitContent, content: .color(ColorPieceContent(size: CGSize(width: 40, height: 40), color: .green))),
+                Piece(sizing: .fitContent, content: .color(ColorPieceContent(size: CGSize(width: 60, height: 60), color: .blue))),
             ]})))
             let p1 = ResolvedPiece(from: p)
             let p2 = p1.layout(in: CGRect(x: 0, y: 0, width: 100, height: 100))

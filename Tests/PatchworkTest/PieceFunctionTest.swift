@@ -93,7 +93,8 @@ final class PieceFunctionTest: XCTestCase {
     func testSimpleForm() {
         let a = PieceView()
         let b = divY {
-            divX(height: .rigid) {
+            space()
+            divX(height: .fitContent) {
                 space(size: CGSize(width: 0, height: 20))
                 stackZ {
                     color(.red.withAlphaComponent(0.1))
@@ -113,21 +114,21 @@ final class PieceFunctionTest: XCTestCase {
                     }
                 }
             }
-            divX(height: .rigid) {
+            divX(height: .fitContent) {
                 space(size: CGSize(width: 0, height: 20))
                 stackZ {
                     color(.red.withAlphaComponent(0.2))
                     text(NSAttributedString(string: "AAA", attributes: [.font: UIFont.systemFont(ofSize: UIFont.systemFontSize)]))
                 }
             }
-            divX(height: .rigid) {
+            divX(height: .fitContent) {
                 space(size: CGSize(width: 0, height: 20))
                 stackZ {
                     color(.red.withAlphaComponent(0.3))
                     text(NSAttributedString(string: "AAA", attributes: [.font: UIFont.systemFont(ofSize: UIFont.systemFontSize)]))
                 }
             }
-            divX(height: .rigid) {
+            divX(height: .fitContent) {
                 space(size: CGSize(width: 0, height: 20))
                 stackZ {
                     color(.red.withAlphaComponent(0.4))

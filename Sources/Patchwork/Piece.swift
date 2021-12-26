@@ -3,6 +3,10 @@ import UIKit
 public struct Piece {
     public var sizing: PieceSizing
     public var content: PieceContent
+    public init(width w:PieceSizingMode, height h:PieceSizingMode, content c: PieceContent) {
+        sizing = PieceSizing(width: w, height: h)
+        content = c
+    }
     public init(sizing s:PieceSizingMode, content c: PieceContent) {
         sizing = PieceSizing(width: s, height: s)
         content = c
@@ -13,16 +17,18 @@ public struct Piece {
     }
 }
 public struct PieceSizing: Equatable {
-    public var width = PieceSizingMode.rigid
-    public var height = PieceSizingMode.rigid
+    public var width = PieceSizingMode.fitContent
+    public var height = PieceSizingMode.fitContent
     public init(width w:PieceSizingMode, height h:PieceSizingMode) {
         width = w
         height = h
     }
 }
 public enum PieceSizingMode: Equatable {
-    case rigid
-    case flex
+    /// Fits to minimum size of **content**.
+    case fitContent
+    /// Fills all available space defined by **container**.
+    case fillContainer
 }
 public enum PieceContent {
     case stitch(Stitch)

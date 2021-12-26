@@ -7,13 +7,13 @@ import UIKit
 /// If you need to update their frames, you need to call `setNeedsLayout` here.
 open class PieceView: UIView {
     private let stitchView = PieceStitchView()
-    open var piece = Piece(sizing: .flex, content: .space(.zero)) {
+    open var piece = Piece(sizing: .fillContainer, content: .space(.zero)) {
         didSet {
             if stitchView.superview == nil {
                 addSubview(stitchView)
             }
             let root = Piece(
-                sizing: .flex,
+                sizing: .fillContainer,
                 content: .stitch(Stitch(
                     version: AnyHashable(AlwaysDifferent()),
                     content: { [piece] in
