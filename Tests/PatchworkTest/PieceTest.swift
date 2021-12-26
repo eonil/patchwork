@@ -22,7 +22,7 @@ final class PieceTest: XCTestCase {
             XCTAssertEqual(p2.frame, CGRect(x: 45, y: 45, width: 10, height: 10))
         }
         do {
-            let p = Piece(sizing: .flexible, content: .space(.zero))
+            let p = Piece(sizing: .flex, content: .space(.zero))
             let p1 = ResolvedPiece(from: p)
             XCTAssertEqual(p1.sizing, p.sizing)
             XCTAssertEqual(p1.content.fittingSize, .zero)
@@ -53,7 +53,7 @@ final class PieceTest: XCTestCase {
             let p = Piece(sizing: .rigid, content: .stitch(Stitch(version: 1, content: {
                 StitchContent(axis: .x, segments: [
                     Piece(sizing: .rigid, content: .color(ColorPieceContent(size: CGSize(width: 10, height: 20), color: .red))),
-                    Piece(sizing: .flexible, content: .color(ColorPieceContent(size: .zero, color: .blue))),
+                    Piece(sizing: .flex, content: .color(ColorPieceContent(size: .zero, color: .blue))),
                 ])
             })))
             let p1 = ResolvedPiece(from: p)
@@ -61,10 +61,10 @@ final class PieceTest: XCTestCase {
             XCTAssertEqual(p2.frame, CGRect(x: 50 - 5, y: 100 - 10, width: 10, height: 20))
         }
         do {
-            let p = Piece(sizing: .flexible, content: .stitch(Stitch(version: 1, content: {
+            let p = Piece(sizing: .flex, content: .stitch(Stitch(version: 1, content: {
                 StitchContent(axis: .x, segments: [
                     Piece(sizing: .rigid, content: .color(ColorPieceContent(size: CGSize(width: 10, height: 20), color: .red))),
-                    Piece(sizing: .flexible, content: .color(ColorPieceContent(size: .zero, color: .blue))),
+                    Piece(sizing: .flex, content: .color(ColorPieceContent(size: .zero, color: .blue))),
                 ])
             })))
             let p1 = ResolvedPiece(from: p)
@@ -76,13 +76,13 @@ final class PieceTest: XCTestCase {
             XCTAssertEqual(x2[1].frame, CGRect(x: 10, y: 0, width: 90, height: 200))
         }
         do {
-            let p = Piece(sizing: .flexible, content: .stitch(Stitch(version: 1, content: {
+            let p = Piece(sizing: .flex, content: .stitch(Stitch(version: 1, content: {
                 StitchContent(axis: .x, segments: [
                     Piece(sizing: .rigid, content: .color(ColorPieceContent(size: CGSize(width: 10, height: 20), color: .red))),
-                    Piece(sizing: .flexible, content: .stitch(Stitch(version: 2, content: {
+                    Piece(sizing: .flex, content: .stitch(Stitch(version: 2, content: {
                         StitchContent(axis: .y, segments: [
-                            Piece(sizing: .flexible, content: .color(ColorPieceContent(size: .zero, color: .green))),
-                            Piece(sizing: .flexible, content: .color(ColorPieceContent(size: .zero, color: .blue))),
+                            Piece(sizing: .flex, content: .color(ColorPieceContent(size: .zero, color: .green))),
+                            Piece(sizing: .flex, content: .color(ColorPieceContent(size: .zero, color: .blue))),
                         ])
                     }))),
                 ])

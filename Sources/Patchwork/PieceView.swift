@@ -9,7 +9,7 @@ open class PieceView: UIView {
                 addSubview(stitchView)
             }
             let root = Piece(
-                sizing: .flexible,
+                sizing: .flex,
                 content: .stitch(Stitch(
                     version: AnyHashable(AlwaysDifferent()),
                     content: { [piece] in

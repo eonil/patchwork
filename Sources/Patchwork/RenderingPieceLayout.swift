@@ -93,7 +93,6 @@ extension ResolvedStitch {
                 return RenderingPieceLayout(frame: f, content: .space)
             }
         })
-        
     }
 }
 
@@ -106,7 +105,7 @@ private func horizontalStitchSizes(of segments:[ResolvedPiece], in bounds:CGRect
     var segmentSizes = segments.map(\.content.fittingSize)
     let sumX = segmentSizes.lazy.map(\.width).reduce(0, +)
     let extraX = bounds.width - sumX
-    let flexIndices = segments.enumerated().filter({ _,p in p.sizing == .flexible }).map(\.offset)
+    let flexIndices = segments.enumerated().filter({ _,p in p.sizing == .flex }).map(\.offset)
     let flexSumX = flexIndices.lazy.map({ i in segmentSizes[i].width }).reduce(0, +)
     if flexSumX == 0 {
         /// All zero sized segment. Distribute extra space to all flex segments evenly.
@@ -119,7 +118,7 @@ private func horizontalStitchSizes(of segments:[ResolvedPiece], in bounds:CGRect
     else {
         let flexScaleX = max(0, (flexSumX + extraX) / flexSumX)
         for (i,segment) in segments.enumerated() {
-            if segment.sizing == .flexible {
+            if segment.sizing == .flex {
                 segmentSizes[i].width *= flexScaleX
                 segmentSizes[i].height = bounds.height
             }
@@ -132,7 +131,7 @@ private func verticalStitchSizes(of segments:[ResolvedPiece], in bounds:CGRect) 
     var segmentSizes = segments.map(\.content.fittingSize)
     let sumY = segmentSizes.lazy.map(\.height).reduce(0, +)
     let extraY = bounds.height - sumY
-    let flexIndices = segments.enumerated().filter({ _,p in p.sizing == .flexible }).map(\.offset)
+    let flexIndices = segments.enumerated().filter({ _,p in p.sizing == .flex }).map(\.offset)
     let flexSumY = flexIndices.lazy.map({ i in segmentSizes[i].height }).reduce(0, +)
     if flexSumY == 0 {
         /// All zero sized segment. Distribute extra space to all flex segments evenly.
@@ -145,7 +144,7 @@ private func verticalStitchSizes(of segments:[ResolvedPiece], in bounds:CGRect) 
     else {
         let flexScaleY = max(0, (flexSumY + extraY) / flexSumY)
         for (i,segment) in segments.enumerated() {
-            if segment.sizing == .flexible {
+            if segment.sizing == .flex {
                 segmentSizes[i].height *= flexScaleY
                 segmentSizes[i].width = bounds.width
             }
@@ -191,7 +190,7 @@ extension ResolvedStack {
         let frames = slices.map { p -> CGRect in
             switch p.sizing {
             case .rigid:    return bounds.midPoint.rect.inset(by: p.content.fittingSize.vector.scaled(-0.5))
-            case .flexible: return bounds
+            case .flex: return bounds
             }
         }
         return zip(slices,frames).map({ (p,f) in

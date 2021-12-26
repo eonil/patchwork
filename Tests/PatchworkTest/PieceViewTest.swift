@@ -19,9 +19,9 @@ final class PieceViewTest: XCTestCase {
                 version: AnyHashable(AlwaysDifferent()),
                 content: {
                     StitchContent(axis: .x, segments: [
-                        Piece(sizing: .flexible, content: .color(ColorPieceContent(size: CGSize(width: 10, height: 10), color: .red))),
-                        Piece(sizing: .flexible, content: .color(ColorPieceContent(size: CGSize(width: 10, height: 10), color: .green))),
-                        Piece(sizing: .flexible, content: .color(ColorPieceContent(size: CGSize(width: 10, height: 10), color: .blue))),
+                        Piece(sizing: .flex, content: .color(ColorPieceContent(size: CGSize(width: 10, height: 10), color: .red))),
+                        Piece(sizing: .flex, content: .color(ColorPieceContent(size: CGSize(width: 10, height: 10), color: .green))),
+                        Piece(sizing: .flex, content: .color(ColorPieceContent(size: CGSize(width: 10, height: 10), color: .blue))),
                     ])
                 })))
             a.backgroundColor = .black
@@ -31,13 +31,13 @@ final class PieceViewTest: XCTestCase {
         }
         do {
             let a = PieceView()
-            let b = Piece(sizing: .flexible, content: .stitch(Stitch(
+            let b = Piece(sizing: .flex, content: .stitch(Stitch(
                 version: AnyHashable(AlwaysDifferent()),
                 content: {
                     StitchContent(axis: .x, segments: [
-                        Piece(sizing: .flexible, content: .color(ColorPieceContent(size: CGSize(width: 10, height: 10), color: .red))),
-                        Piece(sizing: .flexible, content: .color(ColorPieceContent(size: CGSize(width: 10, height: 10), color: .green))),
-                        Piece(sizing: .flexible, content: .color(ColorPieceContent(size: CGSize(width: 10, height: 10), color: .blue))),
+                        Piece(sizing: .flex, content: .color(ColorPieceContent(size: CGSize(width: 10, height: 10), color: .red))),
+                        Piece(sizing: .flex, content: .color(ColorPieceContent(size: CGSize(width: 10, height: 10), color: .green))),
+                        Piece(sizing: .flex, content: .color(ColorPieceContent(size: CGSize(width: 10, height: 10), color: .blue))),
                     ])
                 })))
             a.backgroundColor = .black
@@ -47,16 +47,16 @@ final class PieceViewTest: XCTestCase {
         }
         do {
             let a = PieceView()
-            let b = Piece(sizing: .flexible, content: .stitch(Stitch(
+            let b = Piece(sizing: .flex, content: .stitch(Stitch(
                 version: AnyHashable(AlwaysDifferent()),
                 content: {
                     StitchContent(axis: .x, segments: [
                         Piece(sizing: .rigid, content: .color(ColorPieceContent(size: CGSize(width: 10, height: 10), color: .red))),
-                        Piece(sizing: .flexible, content: .stitch(Stitch(version: AnyHashable(AlwaysDifferent()), content: {
+                        Piece(sizing: .flex, content: .stitch(Stitch(version: AnyHashable(AlwaysDifferent()), content: {
                             StitchContent(axis: .x, segments: [
-                                Piece(sizing: .flexible, content: .space(.zero)),
-                                Piece(sizing: .flexible, content: .color(ColorPieceContent(size: CGSize(width: 10, height: 10), color: .green))),
-                                Piece(sizing: .flexible, content: .color(ColorPieceContent(size: CGSize(width: 10, height: 10), color: .blue))),
+                                Piece(sizing: .flex, content: .space(.zero)),
+                                Piece(sizing: .flex, content: .color(ColorPieceContent(size: CGSize(width: 10, height: 10), color: .green))),
+                                Piece(sizing: .flex, content: .color(ColorPieceContent(size: CGSize(width: 10, height: 10), color: .blue))),
                             ])
                         }))),
                         

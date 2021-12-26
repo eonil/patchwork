@@ -10,7 +10,7 @@ public struct Piece {
 }
 public enum PieceSizing {
     case rigid
-    case flexible
+    case flex
 }
 public enum PieceContent {
     case stitch(Stitch)

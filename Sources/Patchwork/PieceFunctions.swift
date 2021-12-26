@@ -1,19 +1,30 @@
 import Foundation
 import CoreGraphics
 
-public func stitchX(version v:AnyHashable = AlwaysDifferent(), @ArrayBuilder<Piece> content c:@escaping() -> [Piece]) -> Piece {
-    Piece(sizing: .flexible, content: .stitch(Stitch(version: v, content: {
+public func divX(version v:AnyHashable = AlwaysDifferent(), @ArrayBuilder<Piece> content c:@escaping() -> [Piece]) -> Piece {
+    Piece(sizing: .flex, content: .stitch(Stitch(version: v, content: {
         StitchContent(axis: .x, segments: c())
     })))
 }
-public func stitchY(version v:AnyHashable = AlwaysDifferent(), @ArrayBuilder<Piece> content c:@escaping() -> [Piece]) -> Piece {
-    Piece(sizing: .flexible, content: .stitch(Stitch(version: v, content: {
+public func divY(version v:AnyHashable = AlwaysDifferent(), @ArrayBuilder<Piece> content c:@escaping() -> [Piece]) -> Piece {
+    Piece(sizing: .flex, content: .stitch(Stitch(version: v, content: {
         StitchContent(axis: .y, segments: c())
     })))
 }
 public func stackZ(version v:AnyHashable = AlwaysDifferent(), @ArrayBuilder<Piece> content c:@escaping() -> [Piece]) -> Piece {
-    Piece(sizing: .flexible, content: .stack(Stack(version: v, content: {
+    Piece(sizing: .flex, content: .stack(Stack(version: v, content: {
         c()
+    })))
+}
+
+public func wrapX(version v:AnyHashable = AlwaysDifferent(), @ArrayBuilder<Piece> content c:@escaping() -> [Piece]) -> Piece {
+    Piece(sizing: .rigid, content: .stitch(Stitch(version: v, content: {
+        StitchContent(axis: .x, segments: c())
+    })))
+}
+public func wrapY(version v:AnyHashable = AlwaysDifferent(), @ArrayBuilder<Piece> content c:@escaping() -> [Piece]) -> Piece {
+    Piece(sizing: .rigid, content: .stitch(Stitch(version: v, content: {
+        StitchContent(axis: .y, segments: c())
     })))
 }
 
@@ -28,7 +39,7 @@ public func image(_ x:OSImage) -> Piece {
 }
 /// Flex sized color.
 public func color(_ x:OSColor) -> Piece {
-    Piece(sizing: .flexible, content: .color(ColorPieceContent(size: .zero, color: x)))
+    Piece(sizing: .flex, content: .color(ColorPieceContent(size: .zero, color: x)))
 }
 /// Rigid sized color.
 public func color(_ x:OSColor, width w:CGFloat, height h:CGFloat) -> Piece {
@@ -36,7 +47,7 @@ public func color(_ x:OSColor, width w:CGFloat, height h:CGFloat) -> Piece {
 }
 /// Flex sized space.
 public func space() -> Piece {
-    Piece(sizing: .flexible, content: .space(.zero))
+    Piece(sizing: .flex, content: .space(.zero))
 }
 /// Rigid sized space.
 public func space(size s:CGSize) -> Piece {
