@@ -1,13 +1,13 @@
 import Foundation
 import CoreGraphics
 
-public func divX(version v:AnyHashable = AlwaysDifferent(), @ArrayBuilder<Piece> content c:@escaping() -> [Piece]) -> Piece {
-    Piece(sizing: .flex, content: .stitch(Stitch(version: v, content: {
+public func divX(version v:AnyHashable = AlwaysDifferent(), height h: PieceSizingMode = .flex, @ArrayBuilder<Piece> content c:@escaping() -> [Piece]) -> Piece {
+    Piece(sizing: PieceSizing(width: .flex, height: h), content: .stitch(Stitch(version: v, content: {
         StitchContent(axis: .x, segments: c())
     })))
 }
-public func divY(version v:AnyHashable = AlwaysDifferent(), @ArrayBuilder<Piece> content c:@escaping() -> [Piece]) -> Piece {
-    Piece(sizing: .flex, content: .stitch(Stitch(version: v, content: {
+public func divY(version v:AnyHashable = AlwaysDifferent(), width w: PieceSizingMode = .flex, @ArrayBuilder<Piece> content c:@escaping() -> [Piece]) -> Piece {
+    Piece(sizing: PieceSizing(width: w, height: .flex), content: .stitch(Stitch(version: v, content: {
         StitchContent(axis: .y, segments: c())
     })))
 }

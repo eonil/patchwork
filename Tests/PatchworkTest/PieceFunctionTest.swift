@@ -90,6 +90,56 @@ final class PieceFunctionTest: XCTestCase {
             assertSnapshot(matching: a, as: .image)
         }
     }
+    func testSimpleForm() {
+        let a = PieceView()
+        let b = divY {
+            divX(height: .rigid) {
+                space(size: CGSize(width: 0, height: 20))
+                stackZ {
+                    color(.red.withAlphaComponent(0.1))
+                    divX {
+                        space()
+                        wrapY {
+                            text(NSAttributedString(string: "AAA", attributes: [
+                                .font: UIFont.systemFont(ofSize: 8),
+                                .foregroundColor: UIColor.white,
+                            ]))
+                            text(NSAttributedString(string: "AAA", attributes: [
+                                .font: UIFont.systemFont(ofSize: 8),
+                                .foregroundColor: UIColor.white,
+                            ]))
+                        }
+                        space(size: CGSize(width: 10, height: 0))
+                    }
+                }
+            }
+            divX(height: .rigid) {
+                space(size: CGSize(width: 0, height: 20))
+                stackZ {
+                    color(.red.withAlphaComponent(0.2))
+                    text(NSAttributedString(string: "AAA", attributes: [.font: UIFont.systemFont(ofSize: UIFont.systemFontSize)]))
+                }
+            }
+            divX(height: .rigid) {
+                space(size: CGSize(width: 0, height: 20))
+                stackZ {
+                    color(.red.withAlphaComponent(0.3))
+                    text(NSAttributedString(string: "AAA", attributes: [.font: UIFont.systemFont(ofSize: UIFont.systemFontSize)]))
+                }
+            }
+            divX(height: .rigid) {
+                space(size: CGSize(width: 0, height: 20))
+                stackZ {
+                    color(.red.withAlphaComponent(0.4))
+                    text(NSAttributedString(string: "AAA", attributes: [.font: UIFont.systemFont(ofSize: UIFont.systemFontSize)]))
+                }
+            }
+        }
+        a.backgroundColor = .black
+        a.piece = b
+        a.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
+        assertSnapshot(matching: a, as: .image)
+    }
 }
 
 #endif

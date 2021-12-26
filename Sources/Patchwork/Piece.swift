@@ -3,12 +3,24 @@ import UIKit
 public struct Piece {
     public var sizing: PieceSizing
     public var content: PieceContent
-    public init(sizing s:PieceSizing = .rigid, content c: PieceContent = .space(.zero)) {
+    public init(sizing s:PieceSizingMode, content c: PieceContent) {
+        sizing = PieceSizing(width: s, height: s)
+        content = c
+    }
+    public init(sizing s:PieceSizing, content c: PieceContent) {
         sizing = s
         content = c
     }
 }
-public enum PieceSizing {
+public struct PieceSizing: Equatable {
+    public var width = PieceSizingMode.rigid
+    public var height = PieceSizingMode.rigid
+    public init(width w:PieceSizingMode, height h:PieceSizingMode) {
+        width = w
+        height = h
+    }
+}
+public enum PieceSizingMode: Equatable {
     case rigid
     case flex
 }

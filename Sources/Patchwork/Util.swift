@@ -35,6 +35,9 @@ extension CGSize {
     var vector: CGVector {
         CGVector(dx: width, dy: height)
     }
+    func scaled(_ v:CGFloat) -> CGSize {
+        CGSize(width: width * v, height: height * v)
+    }
 }
 extension CGRect {
     func withOrigin(_ v:CGPoint) -> CGRect {
