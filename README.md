@@ -22,3 +22,8 @@ This does not aim to provide full features of UIKit or SwiftUI.
 This aims very small portion of the frameworks -- static information layout.
 Composition of space, color, text, image, button, stack and list.
 
+
+Manual Layout
+-------------
+Due to global effect of AutoLayout, it's difficult to manage them clean.
+ 
