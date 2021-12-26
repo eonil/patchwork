@@ -4,9 +4,10 @@ func unsupported() -> Never {
     fatalError("Unsupported.")
 }
 
-struct AlwaysDifferent: Hashable {
-    static func == (_:AlwaysDifferent, _:AlwaysDifferent) -> Bool { false }
-    static func != (_:AlwaysDifferent, _:AlwaysDifferent) -> Bool { true }
+public struct AlwaysDifferent: Hashable {
+    public init() {}
+    public static func == (_:AlwaysDifferent, _:AlwaysDifferent) -> Bool { false }
+    public static func != (_:AlwaysDifferent, _:AlwaysDifferent) -> Bool { true }
 }
 
 func composeX(_ a:CGSize, _ b:CGSize) -> CGSize {
