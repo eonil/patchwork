@@ -2,7 +2,7 @@
 
 xcodebuild test \
     -workspace Patchwork.xcworkspace \
-    -scheme Patchwork \
+    -scheme PatchworkTest \
     -sdk iphoneos \
     -destination 'name=iPhone 13 Pro Max'
 
