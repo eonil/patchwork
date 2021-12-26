@@ -6,6 +6,7 @@ struct ResolvedPiece {
 }
 enum ResolvedPieceContent {
     case stitch(ResolvedStitch)
+    case stack(ResolvedStack)
     case view(OSView)
     case text(NSAttributedString)
     case image(OSImage)
@@ -16,6 +17,10 @@ struct ResolvedStitch {
     private(set) var version: AnyHashable
     private(set) var axis = StitchAxis.y
     private(set) var segments = [ResolvedPiece]()
+}
+struct ResolvedStack {
+    private(set) var version: AnyHashable
+    private(set) var slices = [ResolvedPiece]()
 }
 
 
@@ -32,9 +37,13 @@ extension ResolvedPiece {
         switch (old.content, new.content) {
         case let (.stitch(a), .stitch(b)):
             return ResolvedPiece(sizing: new.sizing, content: .stitch(a.updated(with: b)))
-            
         case let (_, .stitch(b)):
             return ResolvedPiece(sizing: new.sizing, content: .stitch(ResolvedStitch(from: b)))
+            
+        case let (.stack(a), .stack(b)):
+            return ResolvedPiece(sizing: new.sizing, content: .stack(a.updated(with: b)))
+        case let (_, .stack(b)):
+            return ResolvedPiece(sizing: new.sizing, content: .stack(ResolvedStack(from: b)))
             
         case let (_, .view(b)):
             return ResolvedPiece(sizing: new.sizing, content: .view(b))
@@ -66,6 +75,23 @@ extension ResolvedStitch {
             axis: c.axis,
             segments: c.segments.enumerated().map({ i,p in
                 let old = segments.indices.contains(i) ? segments[i] : ResolvedPiece()
+                let new = old.updated(with: p)
+                return new
+            }))
+    }
+}
+extension ResolvedStack {
+    init(from x:Stack) {
+        version = AnyHashable(AlwaysDifferent())
+        self = updated(with: x)
+    }
+    func updated(with x:Stack) -> ResolvedStack {
+        guard version != x.version else { return self }
+        let c = x.content()
+        return ResolvedStack(
+            version: x.version,
+            slices: c.enumerated().map({ i,p in
+                let old = slices.indices.contains(i) ? slices[i] : ResolvedPiece()
                 let new = old.updated(with: p)
                 return new
             }))

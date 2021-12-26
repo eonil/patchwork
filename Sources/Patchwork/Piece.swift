@@ -14,7 +14,7 @@ public enum PieceSizing {
 }
 public enum PieceContent {
     case stitch(Stitch)
-//    case stack([Piece])
+    case stack(Stack)
     case view(OSView)
     case text(NSAttributedString)
     case image(OSImage)
@@ -71,10 +71,17 @@ public enum StitchAxis {
     case y
 }
 
-struct StitchContext {
-    var availableSpaceSize: CGSize
-    var segmentFittingSizes: [CGSize]
-    var segmentFittingSizeSum: CGSize
-    var segmentFittingSizeMax: CGSize
-    var segmentSizings: [PieceSizing]
+
+
+
+
+public struct Stack {
+    public var version: AnyHashable
+    public var content: () -> [Piece]
+    public init(version v:AnyHashable, content c:@escaping() -> [Piece]) {
+        version = v
+        content = c
+    }
 }
+
+

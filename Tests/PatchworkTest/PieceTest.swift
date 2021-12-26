@@ -100,6 +100,23 @@ final class PieceTest: XCTestCase {
             XCTAssertEqual(x3[1].frame, CGRect(x: 0, y: 100, width: 90, height: 100))
         }
     }
+    func testStack() {
+        do {
+            let p = Piece(sizing: .rigid, content: .stack(Stack(version: 1, content: { [
+                Piece(sizing: .rigid, content: .color(ColorPieceContent(size: CGSize(width: 20, height: 20), color: .red))),
+                Piece(sizing: .rigid, content: .color(ColorPieceContent(size: CGSize(width: 40, height: 40), color: .green))),
+                Piece(sizing: .rigid, content: .color(ColorPieceContent(size: CGSize(width: 60, height: 60), color: .blue))),
+            ]})))
+            let p1 = ResolvedPiece(from: p)
+            let p2 = p1.layout(in: CGRect(x: 0, y: 0, width: 100, height: 100))
+            XCTAssertEqual(p2.frame, CGRect(x: 50 - 30, y: 50 - 30, width: 60, height: 60))
+            guard let x2 = p2.content.stackSublayouts else { return XCTFail() }
+            guard x2.count == 3 else { return XCTFail() }
+            XCTAssertEqual(x2[0].frame, CGRect(x: 30 - 10, y: 30 - 10, width: 20, height: 20))
+            XCTAssertEqual(x2[1].frame, CGRect(x: 30 - 20, y: 30 - 20, width: 40, height: 40))
+            XCTAssertEqual(x2[2].frame, CGRect(x: 30 - 30, y: 30 - 30, width: 60, height: 60))
+        }
+    }
 }
 
 private final class FixedSizedView: UIView {
@@ -108,6 +125,10 @@ private final class FixedSizedView: UIView {
 private extension RenderingPieceContent {
     var stitchSublayouts: [RenderingPieceLayout]? {
         guard case let .stitch(x) = self else { return nil }
+        return x
+    }
+    var stackSublayouts: [RenderingPieceLayout]? {
+        guard case let .stack(x) = self else { return nil }
         return x
     }
 }

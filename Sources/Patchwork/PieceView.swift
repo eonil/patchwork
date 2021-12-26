@@ -70,68 +70,7 @@ private final class PieceStitchView: UIView {
         for i in newResolvedStitch.segments.indices {
             let a = oldResolvedStitch.segments.at(i)
             let b = newResolvedStitch.segments[i]
-            switch (a?.content, b.content) {
-            case let (.some(.stitch(_)), .stitch(bb)):
-                assert(segmentViews.at(i) is PieceStitchView)
-                guard let v = segmentViews.at(i) as? PieceStitchView else { return }
-                v.render(bb)
-            case let (_, .stitch(bb)):
-                segmentViews[i]?.removeFromSuperview()
-                let v = PieceStitchView()
-                addSubview(v)
-                segmentViews[i] = v
-                v.render(bb)
-                
-            case let (.some(.view(aa)), .view(bb)):
-                assert(segmentViews.at(i) is UIView)
-                if aa !== bb {
-                    aa.removeFromSuperview()
-                    addSubview(bb)
-                }
-            case let (_, .view(bb)):
-                segmentViews[i]?.removeFromSuperview()
-                addSubview(bb)
-                segmentViews[i] = bb
-                
-            case let (.some(.image(_)), .image(bb)):
-                assert(segmentViews.at(i) is UIImageView)
-                guard let v = segmentViews.at(i) as? UIImageView else { return }
-                v.image = bb
-            case let (_, .image(bb)):
-                segmentViews[i]?.removeFromSuperview()
-                let v = UIImageView()
-                addSubview(v)
-                segmentViews[i] = v
-                v.image = bb
-                
-            case let (.some(.text(_)), .text(bb)):
-                assert(segmentViews.at(i) is UILabel)
-                guard let v = segmentViews.at(i) as? UILabel else { return }
-                v.attributedText = bb
-            case let (_, .text(bb)):
-                segmentViews[i]?.removeFromSuperview()
-                let v = UILabel()
-                addSubview(v)
-                segmentViews[i] = v
-                v.attributedText = bb
-                
-            case let (.some(.color(_)), .color(bb)):
-                assert(segmentViews.at(i) is UIView)
-                guard let v = segmentViews.at(i) as? UIView else { return }
-                v.backgroundColor = bb.color
-            case let (_, .color(bb)):
-                segmentViews[i]?.removeFromSuperview()
-                let v = UIView()
-                addSubview(v)
-                segmentViews[i] = v
-                v.backgroundColor = bb.color
-
-            case (.some(.space), .space):
-                assert(segmentViews.at(i) == nil)
-            case (_, .space):
-                segmentViews[i]?.removeFromSuperview()
-                segmentViews[i] = nil
-            }
+            updateContent(from: a?.content, to: b.content, at: i, in: &segmentViews)
         }
         resolvedStitch = newResolvedStitch
     }
@@ -142,6 +81,133 @@ private final class PieceStitchView: UIView {
         
         for (layout,view) in zip(layout,segmentViews) {
             view?.frame = layout.frame
+        }
+    }
+}
+
+private final class PieceStackView: UIView {
+    private var resolvedStack: ResolvedStack
+    private var sliceLayouts = [RenderingPieceLayout]()
+    private var sliceViews = [UIView?]()
+    
+    override init(frame x: CGRect) {
+        resolvedStack = ResolvedStack(
+            version: AnyHashable(AlwaysDifferent()),
+            slices: [])
+        super.init(frame: x)
+    }
+    required init?(coder: NSCoder) {
+        unsupported()
+    }
+    func render(_ x:ResolvedStack) {
+        let oldResolvedStack = resolvedStack
+        let newResolvedStack = x
+        guard oldResolvedStack.version != newResolvedStack.version else { return }
+
+        /// Match segment view holding array length.
+        for v in sliceViews[min(sliceViews.count,newResolvedStack.slices.count)...] { v?.removeFromSuperview() }
+        sliceViews.setLength(newResolvedStack.slices.count)
+        
+        /// Build up.
+        for i in newResolvedStack.slices.indices {
+            let a = oldResolvedStack.slices.at(i)
+            let b = newResolvedStack.slices[i]
+            updateContent(from: a?.content, to: b.content, at: i, in: &sliceViews)
+        }
+        resolvedStack = newResolvedStack
+    }
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        let layout = resolvedStack.layout(in: bounds)
+        assert(layout.count == sliceViews.count)
+        
+        for (layout,view) in zip(layout,sliceViews) {
+            view?.frame = layout.frame
+        }
+    }
+}
+
+
+
+
+
+
+
+
+private extension UIView {
+    func updateContent(from old:ResolvedPieceContent?, to new:ResolvedPieceContent, at i:Int, in segmentViews: inout [UIView?]) {
+        switch (old, new) {
+        case let (.some(.stitch(_)), .stitch(bb)):
+            assert(segmentViews.at(i) is PieceStitchView)
+            guard let v = segmentViews.at(i) as? PieceStitchView else { return }
+            v.render(bb)
+        case let (_, .stitch(bb)):
+            segmentViews[i]?.removeFromSuperview()
+            let v = PieceStitchView()
+            addSubview(v)
+            segmentViews[i] = v
+            v.render(bb)
+        
+        case let (.some(.stack(_)), .stack(bb)):
+            assert(segmentViews.at(i) is PieceStackView)
+            guard let v = segmentViews.at(i) as? PieceStackView else { return }
+            v.render(bb)
+        case let (_, .stack(bb)):
+            segmentViews[i]?.removeFromSuperview()
+            let v = PieceStackView()
+            addSubview(v)
+            segmentViews[i] = v
+            v.render(bb)
+        
+        case let (.some(.view(aa)), .view(bb)):
+            assert(segmentViews.at(i) is UIView)
+            if aa !== bb {
+                aa.removeFromSuperview()
+                addSubview(bb)
+            }
+        case let (_, .view(bb)):
+            segmentViews[i]?.removeFromSuperview()
+            addSubview(bb)
+            segmentViews[i] = bb
+            
+        case let (.some(.image(_)), .image(bb)):
+            assert(segmentViews.at(i) is UIImageView)
+            guard let v = segmentViews.at(i) as? UIImageView else { return }
+            v.image = bb
+        case let (_, .image(bb)):
+            segmentViews[i]?.removeFromSuperview()
+            let v = UIImageView()
+            addSubview(v)
+            segmentViews[i] = v
+            v.image = bb
+            
+        case let (.some(.text(_)), .text(bb)):
+            assert(segmentViews.at(i) is UILabel)
+            guard let v = segmentViews.at(i) as? UILabel else { return }
+            v.attributedText = bb
+        case let (_, .text(bb)):
+            segmentViews[i]?.removeFromSuperview()
+            let v = UILabel()
+            addSubview(v)
+            segmentViews[i] = v
+            v.attributedText = bb
+            
+        case let (.some(.color(_)), .color(bb)):
+            assert(segmentViews.at(i) is UIView)
+            guard let v = segmentViews.at(i) as? UIView else { return }
+            v.backgroundColor = bb.color
+        case let (_, .color(bb)):
+            segmentViews[i]?.removeFromSuperview()
+            let v = UIView()
+            addSubview(v)
+            segmentViews[i] = v
+            v.backgroundColor = bb.color
+
+        case (.some(.space), .space):
+            assert(segmentViews.at(i) == nil)
+        case (_, .space):
+            segmentViews[i]?.removeFromSuperview()
+            segmentViews[i] = nil
         }
     }
 }

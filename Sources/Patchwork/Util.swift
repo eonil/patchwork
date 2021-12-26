@@ -67,9 +67,17 @@ extension CGRect {
     func inset(by v:CGVector) -> CGRect {
         insetBy(dx: v.dx, dy: v.dy)
     }
+    
+    var midPoint: CGPoint {
+        CGPoint(x: midX, y: midY)
+    }
 }
 extension CGVector {
     func scaled(_ v:CGFloat) -> CGVector {
         CGVector(dx: dx * v, dy: dy * v)
     }
+}
+
+func perAxisMax(_ a:CGSize, _ b:CGSize) -> CGSize {
+    CGSize(width: max(a.width, b.width), height: max(a.height, b.height))
 }

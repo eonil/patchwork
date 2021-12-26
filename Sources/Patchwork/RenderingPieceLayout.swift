@@ -7,6 +7,7 @@ struct RenderingPieceLayout {
 }
 enum RenderingPieceContent {
     case stitch([RenderingPieceLayout])
+    case stack([RenderingPieceLayout])
     case view(OSView)
     case text(NSAttributedString)
     case image(OSImage)
@@ -30,6 +31,7 @@ extension ResolvedPieceContent {
     var fittingSize: CGSize {
         switch self {
         case let .stitch(x):    return x.fittingSize
+        case let .stack(x):     return x.fittingSize
         case let .view(x):      return x.sizeThatFits(.zero)
         case let .text(x):      return x.size()
         case let .image(x):     return x.size
@@ -44,6 +46,11 @@ extension ResolvedStitch {
         case .x:    return segments.lazy.map(\.content.fittingSize).reduce(.zero, composeX)
         case .y:    return segments.lazy.map(\.content.fittingSize).reduce(.zero, composeY)
         }
+    }
+}
+extension ResolvedStack {
+    var fittingSize: CGSize {
+        slices.map(\.content.fittingSize).reduce(.zero, perAxisMax)
     }
 }
 
@@ -66,6 +73,9 @@ extension ResolvedStitch {
             switch p.content {
             case let .stitch(x):
                 return RenderingPieceLayout(frame: f, content: .stitch(x.layout(in: f.withOrigin(.zero))))
+                
+            case let .stack(x):
+                return RenderingPieceLayout(frame: f, content: .stack(x.layout(in: f.withOrigin(.zero))))
                 
             case let .view(x):
                 return RenderingPieceLayout(frame: f, content: .view(x))
@@ -167,4 +177,46 @@ private func verticalStitchingFrame(of sizes:[CGSize], in bounds:CGRect) -> [CGR
         y += size.height
     }
     return frames
+}
+
+
+
+
+
+
+
+
+extension ResolvedStack {
+    func layout(in bounds:CGRect) -> [RenderingPieceLayout] {
+        let frames = slices.map { p -> CGRect in
+            switch p.sizing {
+            case .rigid:    return bounds.midPoint.rect.inset(by: p.content.fittingSize.vector.scaled(-0.5))
+            case .flexible: return bounds
+            }
+        }
+        return zip(slices,frames).map({ (p,f) in
+            switch p.content {
+            case let .stitch(x):
+                return RenderingPieceLayout(frame: f, content: .stitch(x.layout(in: f.withOrigin(.zero))))
+                
+            case let .stack(x):
+                return RenderingPieceLayout(frame: f, content: .stack(x.layout(in: f.withOrigin(.zero))))
+                
+            case let .view(x):
+                return RenderingPieceLayout(frame: f, content: .view(x))
+                
+            case let .text(x):
+                return RenderingPieceLayout(frame: f, content: .text(x))
+                
+            case let .image(x):
+                return RenderingPieceLayout(frame: f, content: .image(x))
+                
+            case let .color(x):
+                return RenderingPieceLayout(frame: f, content: .color(x.color))
+                
+            case .space:
+                return RenderingPieceLayout(frame: f, content: .space)
+            }
+        })
+    }
 }

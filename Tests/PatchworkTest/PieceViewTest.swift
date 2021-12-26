@@ -67,6 +67,18 @@ final class PieceViewTest: XCTestCase {
             a.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
             assertSnapshot(matching: a, as: .image)
         }
+        do {
+            let a = PieceView()
+            let b = Piece(sizing: .rigid, content: .stack(Stack(version: 1, content: { [
+                Piece(sizing: .rigid, content: .color(ColorPieceContent(size: CGSize(width: 20, height: 20), color: .red.withAlphaComponent(0.5)))),
+                Piece(sizing: .rigid, content: .color(ColorPieceContent(size: CGSize(width: 40, height: 40), color: .green.withAlphaComponent(0.5)))),
+                Piece(sizing: .rigid, content: .color(ColorPieceContent(size: CGSize(width: 60, height: 60), color: .blue.withAlphaComponent(0.5)))),
+            ]})))
+            a.backgroundColor = .black
+            a.piece = b
+            a.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
+            assertSnapshot(matching: a, as: .image)
+        }
     }
 }
 
