@@ -1,6 +1,10 @@
 import Foundation
 import UIKit
 
+/// Renders a `Piece`.
+///
+/// Please note that this view won't update embedded `UIView`/`NSView` frames automatically.
+/// If you need to update their frames, you need to call `setNeedsLayout` here.
 open class PieceView: UIView {
     private let stitchView = PieceStitchView()
     open var piece = Piece() {
