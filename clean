@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+xcodebuild clean \
+    -workspace Patchwork.xcworkspace \
+    -scheme Patchwork \
+    -destination 'name=iPhone 13 Pro Max'

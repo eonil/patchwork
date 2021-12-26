@@ -12,14 +12,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Prepare Xcode Project for iOS Execution
-        run: |
-          swift package generate-xcodeproj
-
       - name: Build Test
-        run: |
-          xcodebuild build -sdk iphoneos -scheme 'Patchwork-Package'
+        run: ./build
 
       - name: Unit Test
-        run: |
-          xcodebuild test -destination 'name=iPhone 11' -scheme 'Patchwork-Package'
+        run: ./test

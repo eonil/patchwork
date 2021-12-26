@@ -2,6 +2,15 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:build">
+   </FileRef>
+   <FileRef
+      location = "group:clean">
+   </FileRef>
+   <FileRef
+      location = "group:test">
+   </FileRef>
+   <FileRef
       location = "group:">
    </FileRef>
    <FileRef
