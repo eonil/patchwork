@@ -50,12 +50,26 @@ public func space() -> Piece {
     Piece(sizing: .fillContainer, content: .space(.zero))
 }
 /// Rigid sized space.
-public func space(size s:CGSize) -> Piece {
-    Piece(sizing: .fitContent, content: .space(s))
+public func space(width w:CGFloat, height h:CGFloat) -> Piece {
+    Piece(sizing: .fitContent, content: .space(CGSize(width: w, height: h)))
 }
 
 
 @resultBuilder
-struct ArrayBuilder<Element> {
-    static func buildBlock(_ components: Element...) -> [Element] { components }
+public struct ArrayBuilder<Element> {
+    public static func buildBlock(_ components: Element...) -> [Element] { components }
+//    public static func buildBlock(_ components: [Element]...) -> [Element] { components.flatMap({ $0 }) }
+//    public static func buildBlock<A:ArrayConvertible>(_ components: A...) -> [Element] where A.Element == Element { components.flatMap(\.array) }
+//    public static func buildArray(_ components: [Element]) -> [Element] { components }
+//    public static func buildArray(_ components: [[Element]]) -> [Element] { components.flatMap({ $0 }) }
 }
+//public protocol ArrayConvertible {
+//    associatedtype Element
+//    var array: [Element] { get }
+//}
+//extension Piece: ArrayConvertible {
+//    public var array: [Piece] { [self] }
+//}
+//extension Array: ArrayConvertible where Element == Piece {
+//    public var array: [Piece] { self }
+//}

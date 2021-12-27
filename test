@@ -5,4 +5,3 @@ xcodebuild test \
     -scheme PatchworkTest \
     -sdk iphoneos \
     -destination 'name=iPhone 13 Pro Max'
-

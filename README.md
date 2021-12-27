@@ -35,3 +35,10 @@ Data Flow
 - Once resolved subtree can be used for final layout/rendering.
 - On layout (e.g. frame changed), `PieceView` produces `RenderingPieceLayout` tree from `ResolvedPiece` tree.
 - `PieceView` updates in-place or rebuilds view subtree to render `RenderingPieceLayout` tree. 
+
+
+
+To Do
+------
+- Overflow clipping support.
+- Polish interface more.

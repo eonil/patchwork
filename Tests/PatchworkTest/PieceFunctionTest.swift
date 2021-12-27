@@ -95,7 +95,7 @@ final class PieceFunctionTest: XCTestCase {
         let b = divY {
             space()
             divX(height: .fitContent) {
-                space(size: CGSize(width: 0, height: 20))
+                space(width: 0, height: 20)
                 stackZ {
                     color(.red.withAlphaComponent(0.1))
                     divX {
@@ -110,26 +110,26 @@ final class PieceFunctionTest: XCTestCase {
                                 .foregroundColor: UIColor.white,
                             ]))
                         }
-                        space(size: CGSize(width: 10, height: 0))
+                        space(width: 10, height: 0)
                     }
                 }
             }
             divX(height: .fitContent) {
-                space(size: CGSize(width: 0, height: 20))
+                space(width: 0, height: 20)
                 stackZ {
                     color(.red.withAlphaComponent(0.2))
                     text(NSAttributedString(string: "AAA", attributes: [.font: UIFont.systemFont(ofSize: UIFont.systemFontSize)]))
                 }
             }
             divX(height: .fitContent) {
-                space(size: CGSize(width: 0, height: 20))
+                space(width: 0, height: 20)
                 stackZ {
                     color(.red.withAlphaComponent(0.3))
                     text(NSAttributedString(string: "AAA", attributes: [.font: UIFont.systemFont(ofSize: UIFont.systemFontSize)]))
                 }
             }
             divX(height: .fitContent) {
-                space(size: CGSize(width: 0, height: 20))
+                space(width: 0, height: 20)
                 stackZ {
                     color(.red.withAlphaComponent(0.4))
                     text(NSAttributedString(string: "AAA", attributes: [.font: UIFont.systemFont(ofSize: UIFont.systemFontSize)]))

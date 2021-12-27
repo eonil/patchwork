@@ -24,6 +24,7 @@ open class PieceView: UIView {
             let resolved = ResolvedPiece(from: root)
             guard case let .stitch(x) = resolved.content else { return }
             stitchView.render(x)
+            setNeedsLayout()
         }
     }
     open override func layoutSubviews() {
@@ -77,6 +78,7 @@ private final class PieceStitchView: UIView {
             updateContent(from: a?.content, to: b.content, at: i, in: &segmentViews)
         }
         resolvedStitch = newResolvedStitch
+        setNeedsLayout()
     }
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -119,6 +121,7 @@ private final class PieceStackView: UIView {
             updateContent(from: a?.content, to: b.content, at: i, in: &sliceViews)
         }
         resolvedStack = newResolvedStack
+        setNeedsLayout()
     }
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -208,7 +211,7 @@ private extension UIView {
             v.backgroundColor = bb.color
 
         case (.some(.space), .space):
-            assert(segmentViews.at(i) == nil)
+            assert(segmentViews.at(i) == .some(nil))
         case (_, .space):
             segmentViews[i]?.removeFromSuperview()
             segmentViews[i] = nil
