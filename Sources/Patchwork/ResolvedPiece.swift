@@ -1,7 +1,7 @@
 import UIKit
 
 struct ResolvedPiece {
-    var sizing = PieceSizing(width: .fitContent, height: .fitContent)
+    var sizing = PieceSizing(horizontal: .fitContent, vertical: .fitContent)
     var content = ResolvedPieceContent.space(.zero)
 }
 enum ResolvedPieceContent {

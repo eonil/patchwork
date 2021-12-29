@@ -2,17 +2,17 @@ import Foundation
 import CoreGraphics
 
 public func divX(version v:AnyHashable = AlwaysDifferent(), height h: PieceSizingMode = .fillContainer, @ArrayBuilder<Piece> content c:@escaping() -> [Piece]) -> Piece {
-    Piece(sizing: PieceSizing(width: .fillContainer, height: h), content: .stitch(Stitch(version: v, content: {
+    Piece(sizing: PieceSizing(horizontal: .fillContainer, vertical: h), content: .stitch(Stitch(version: v, content: {
         StitchContent(axis: .x, segments: c())
     })))
 }
 public func divY(version v:AnyHashable = AlwaysDifferent(), width w: PieceSizingMode = .fillContainer, @ArrayBuilder<Piece> content c:@escaping() -> [Piece]) -> Piece {
-    Piece(sizing: PieceSizing(width: w, height: .fillContainer), content: .stitch(Stitch(version: v, content: {
+    Piece(sizing: PieceSizing(horizontal: w, vertical: .fillContainer), content: .stitch(Stitch(version: v, content: {
         StitchContent(axis: .y, segments: c())
     })))
 }
 public func stackZ(version v:AnyHashable = AlwaysDifferent(), width w: PieceSizingMode = .fillContainer, height h: PieceSizingMode = .fillContainer, @ArrayBuilder<Piece> content c:@escaping() -> [Piece]) -> Piece {
-    Piece(width: w, height: h, content: .stack(Stack(version: v, content: {
+    Piece(x: w, height: h, content: .stack(Stack(version: v, content: {
         c()
     })))
 }

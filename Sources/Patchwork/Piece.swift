@@ -1,14 +1,25 @@
 import UIKit
 
+/// Defines a unit of stitching.
+///
+/// All pieces have defined "fitting size".
+/// The "fitting size" is piece's preferred minimal size that can present its content properly.
+///
+/// The "fitting size will be respected and kept by layout engine if the piece's sizing mode is set to `.fitContent`.
+/// In this case, the piece's size is effectievly defined by content.
+///
+/// Otherwise (`.fillContainer`), the container defines piece's size.
+/// In this case, "fitting size" is no longer respected, and the piece can be smaller or larger than its "fitting size".
+///
 public struct Piece {
     public var sizing: PieceSizing
     public var content: PieceContent
-    public init(width w:PieceSizingMode, height h:PieceSizingMode, content c: PieceContent) {
-        sizing = PieceSizing(width: w, height: h)
+    public init(horizontal x:PieceSizingMode, vertical y:PieceSizingMode, content c: PieceContent) {
+        sizing = PieceSizing(horizontal: x, vertical: y)
         content = c
     }
     public init(sizing s:PieceSizingMode, content c: PieceContent) {
-        sizing = PieceSizing(width: s, height: s)
+        sizing = PieceSizing(horizontal: s, vertical: s)
         content = c
     }
     public init(sizing s:PieceSizing, content c: PieceContent) {
@@ -17,11 +28,11 @@ public struct Piece {
     }
 }
 public struct PieceSizing: Equatable {
-    public var width = PieceSizingMode.fitContent
-    public var height = PieceSizingMode.fitContent
-    public init(width w:PieceSizingMode, height h:PieceSizingMode) {
-        width = w
-        height = h
+    public var horizontal = PieceSizingMode.fitContent
+    public var vertical = PieceSizingMode.fitContent
+    public init(horizontal w:PieceSizingMode, vertical h:PieceSizingMode) {
+        horizontal = w
+        vertical = h
     }
 }
 public enum PieceSizingMode: Equatable {
