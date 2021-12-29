@@ -30,9 +30,9 @@ public struct Piece {
 public struct PieceSizing: Equatable {
     public var horizontal = PieceSizingMode.fitContent
     public var vertical = PieceSizingMode.fitContent
-    public init(horizontal w:PieceSizingMode, vertical h:PieceSizingMode) {
-        horizontal = w
-        vertical = h
+    public init(horizontal h:PieceSizingMode, vertical v:PieceSizingMode) {
+        horizontal = h
+        vertical = v
     }
 }
 public enum PieceSizingMode: Equatable {
