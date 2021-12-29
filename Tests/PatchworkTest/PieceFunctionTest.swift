@@ -10,7 +10,7 @@ final class PieceFunctionTest: XCTestCase {
             let b = color(.white, horizontal: 20, vertical: 40)
             a.backgroundColor = .black
             a.piece = b
-            a.frame = CGRect(x: 0, y: 0, horizontal: 100, vertical: 100)
+            a.frame = CGRect(horizontal: 0, vertical: 0, horizontal: 100, vertical: 100)
             assertSnapshot(matching: a, as: .image)
         }
         do {
@@ -22,7 +22,7 @@ final class PieceFunctionTest: XCTestCase {
             }
             a.backgroundColor = .black
             a.piece = b
-            a.frame = CGRect(x: 0, y: 0, horizontal: 100, vertical: 100)
+            a.frame = CGRect(horizontal: 0, vertical: 0, horizontal: 100, vertical: 100)
             assertSnapshot(matching: a, as: .image)
         }
         do {
@@ -34,7 +34,7 @@ final class PieceFunctionTest: XCTestCase {
             }
             a.backgroundColor = .black
             a.piece = b
-            a.frame = CGRect(x: 0, y: 0, horizontal: 100, vertical: 100)
+            a.frame = CGRect(horizontal: 0, vertical: 0, horizontal: 100, vertical: 100)
             assertSnapshot(matching: a, as: .image)
         }
         do {
@@ -49,7 +49,7 @@ final class PieceFunctionTest: XCTestCase {
             }
             a.backgroundColor = .black
             a.piece = b
-            a.frame = CGRect(x: 0, y: 0, horizontal: 100, vertical: 100)
+            a.frame = CGRect(horizontal: 0, vertical: 0, horizontal: 100, vertical: 100)
             assertSnapshot(matching: a, as: .image)
         }
         do {
@@ -61,7 +61,7 @@ final class PieceFunctionTest: XCTestCase {
             }
             a.backgroundColor = .black
             a.piece = b
-            a.frame = CGRect(x: 0, y: 0, horizontal: 100, vertical: 100)
+            a.frame = CGRect(horizontal: 0, vertical: 0, horizontal: 100, vertical: 100)
             assertSnapshot(matching: a, as: .image)
         }
         do {
@@ -86,7 +86,7 @@ final class PieceFunctionTest: XCTestCase {
             }
             a.backgroundColor = .black
             a.piece = b
-            a.frame = CGRect(x: 0, y: 0, horizontal: 100, vertical: 100)
+            a.frame = CGRect(horizontal: 0, vertical: 0, horizontal: 100, vertical: 100)
             assertSnapshot(matching: a, as: .image)
         }
     }
@@ -138,7 +138,7 @@ final class PieceFunctionTest: XCTestCase {
         }
         a.backgroundColor = .black
         a.piece = b
-        a.frame = CGRect(x: 0, y: 0, horizontal: 100, vertical: 100)
+        a.frame = CGRect(horizontal: 0, vertical: 0, horizontal: 100, vertical: 100)
         assertSnapshot(matching: a, as: .image)
     }
 }

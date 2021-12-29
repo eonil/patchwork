@@ -15,7 +15,7 @@ enum ResolvedPieceContent {
 }
 struct ResolvedStitch {
     private(set) var version: AnyHashable
-    private(set) var axis = StitchAxis.y
+    private(set) var axis = StitchAxis.vertical
     private(set) var segments = [ResolvedPiece]()
 }
 struct ResolvedStack {

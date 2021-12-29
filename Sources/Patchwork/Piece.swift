@@ -93,12 +93,12 @@ public struct Stitch {
     }
 }
 public struct StitchContent {
-    public var axis = StitchAxis.y
+    public var axis = StitchAxis.vertical
     public var segments = [Piece]()
 }
 public enum StitchAxis {
-    case x
-    case y
+    case horizontal
+    case vertical
 }
 
 

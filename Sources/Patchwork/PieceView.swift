@@ -17,7 +17,7 @@ open class PieceView: UIView {
                 content: .stitch(Stitch(
                     version: AnyHashable(AlwaysDifferent()),
                     content: { [piece] in
-                        StitchContent(axis: .x, segments: [
+                        StitchContent(axis: .horizontal, segments: [
                             piece,
                         ])
                     })))
@@ -55,7 +55,7 @@ private final class PieceStitchView: UIView {
     override init(frame x: CGRect) {
         resolvedStitch = ResolvedStitch(
             version: AnyHashable(AlwaysDifferent()),
-            axis: .x,
+            axis: .horizontal,
             segments: [])
         super.init(frame: x)
     }

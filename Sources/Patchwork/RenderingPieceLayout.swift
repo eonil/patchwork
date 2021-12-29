@@ -22,7 +22,7 @@ extension ResolvedPiece {
     func layout(in bounds:CGRect) -> RenderingPieceLayout {
         let x = ResolvedStitch(
             version: AnyHashable(AlwaysDifferent()), 
-            axis: .x,
+            axis: .horizontal,
             segments: [self])
         return x.layout(in: bounds)[0]
     }
@@ -43,8 +43,8 @@ extension ResolvedPieceContent {
 extension ResolvedStitch {
     var fittingSize: CGSize {
         switch axis {
-        case .x:    return segments.lazy.map(\.content.fittingSize).reduce(.zero, composeX)
-        case .y:    return segments.lazy.map(\.content.fittingSize).reduce(.zero, composeY)
+        case .horizontal:    return segments.lazy.map(\.content.fittingSize).reduce(.zero, composeX)
+        case .vertical:    return segments.lazy.map(\.content.fittingSize).reduce(.zero, composeY)
         }
     }
 }
@@ -61,11 +61,11 @@ extension ResolvedStitch {
         let segmentSizes: [CGSize]
         let segmentFrames: [CGRect]
         switch axis {
-        case .x:
+        case .horizontal:
             segmentSizes = horizontalStitchSizes(of: segments, in: bounds)
             segmentFrames = horizontalStitchingFrame(of: segmentSizes, in: bounds)
             
-        case .y:
+        case .vertical:
             segmentSizes = verticalStitchSizes(of: segments, in: bounds)
             segmentFrames = verticalStitchingFrame(of: segmentSizes, in: bounds)
         }

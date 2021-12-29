@@ -110,11 +110,11 @@ final class AnimationSample: UIView {
     private func makePiece(_ n:Int) -> Piece {
         let b = updateButton
         return divY {
-            stackZ(height: .fitContent) {
+            stackZ(vertical: .fitContent) {
                 color(.blue)
                 view(b)
             }
-            stackZ(height: .fitContent) {
+            stackZ(vertical: .fitContent) {
                 color(.red)
                 wrapY {
                     space(width: 10, height: 10)

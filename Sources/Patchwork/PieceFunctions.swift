@@ -1,30 +1,30 @@
 import Foundation
 import CoreGraphics
 
-public func divX(version v:AnyHashable = AlwaysDifferent(), height h: PieceSizingMode = .fillContainer, @ArrayBuilder<Piece> content c:@escaping() -> [Piece]) -> Piece {
+public func divX(version v:AnyHashable = AlwaysDifferent(), vertical h: PieceSizingMode = .fillContainer, @ArrayBuilder<Piece> content c:@escaping() -> [Piece]) -> Piece {
     Piece(sizing: PieceSizing(horizontal: .fillContainer, vertical: h), content: .stitch(Stitch(version: v, content: {
-        StitchContent(axis: .x, segments: c())
+        StitchContent(axis: .horizontal, segments: c())
     })))
 }
-public func divY(version v:AnyHashable = AlwaysDifferent(), width w: PieceSizingMode = .fillContainer, @ArrayBuilder<Piece> content c:@escaping() -> [Piece]) -> Piece {
+public func divY(version v:AnyHashable = AlwaysDifferent(), horizontal w: PieceSizingMode = .fillContainer, @ArrayBuilder<Piece> content c:@escaping() -> [Piece]) -> Piece {
     Piece(sizing: PieceSizing(horizontal: w, vertical: .fillContainer), content: .stitch(Stitch(version: v, content: {
-        StitchContent(axis: .y, segments: c())
+        StitchContent(axis: .vertical, segments: c())
     })))
 }
-public func stackZ(version v:AnyHashable = AlwaysDifferent(), width w: PieceSizingMode = .fillContainer, height h: PieceSizingMode = .fillContainer, @ArrayBuilder<Piece> content c:@escaping() -> [Piece]) -> Piece {
-    Piece(x: w, height: h, content: .stack(Stack(version: v, content: {
+public func stackZ(version x:AnyHashable = AlwaysDifferent(), horizontal h: PieceSizingMode = .fillContainer, vertical v: PieceSizingMode = .fillContainer, @ArrayBuilder<Piece> content c:@escaping() -> [Piece]) -> Piece {
+    Piece(horizontal: h, vertical: v, content: .stack(Stack(version: x, content: {
         c()
     })))
 }
 
 public func wrapX(version v:AnyHashable = AlwaysDifferent(), @ArrayBuilder<Piece> content c:@escaping() -> [Piece]) -> Piece {
     Piece(sizing: .fitContent, content: .stitch(Stitch(version: v, content: {
-        StitchContent(axis: .x, segments: c())
+        StitchContent(axis: .horizontal, segments: c())
     })))
 }
 public func wrapY(version v:AnyHashable = AlwaysDifferent(), @ArrayBuilder<Piece> content c:@escaping() -> [Piece]) -> Piece {
     Piece(sizing: .fitContent, content: .stitch(Stitch(version: v, content: {
-        StitchContent(axis: .y, segments: c())
+        StitchContent(axis: .vertical, segments: c())
     })))
 }
 

@@ -10,7 +10,7 @@ final class PieceViewTest: XCTestCase {
             let b = Piece(sizing: .fitContent, content: .color(ColorPieceContent(size: CGSize(horizontal: 20, vertical: 40), color: .white)))
             a.backgroundColor = .black
             a.piece = b
-            a.frame = CGRect(x: 0, y: 0, horizontal: 100, vertical: 100)
+            a.frame = CGRect(horizontal: 0, vertical: 0, horizontal: 100, vertical: 100)
             assertSnapshot(matching: a, as: .image)
         }
         do {
@@ -18,7 +18,7 @@ final class PieceViewTest: XCTestCase {
             let b = Piece(sizing: .fitContent, content: .stitch(Stitch(
                 version: AnyHashable(AlwaysDifferent()),
                 content: {
-                    StitchContent(axis: .x, segments: [
+                    StitchContent(axis: .horizontal, segments: [
                         Piece(sizing: .fillContainer, content: .color(ColorPieceContent(size: CGSize(horizontal: 10, vertical: 10), color: .red))),
                         Piece(sizing: .fillContainer, content: .color(ColorPieceContent(size: CGSize(horizontal: 10, vertical: 10), color: .green))),
                         Piece(sizing: .fillContainer, content: .color(ColorPieceContent(size: CGSize(horizontal: 10, vertical: 10), color: .blue))),
@@ -26,7 +26,7 @@ final class PieceViewTest: XCTestCase {
                 })))
             a.backgroundColor = .black
             a.piece = b
-            a.frame = CGRect(x: 0, y: 0, horizontal: 100, vertical: 100)
+            a.frame = CGRect(horizontal: 0, vertical: 0, horizontal: 100, vertical: 100)
             assertSnapshot(matching: a, as: .image)
         }
         do {
@@ -34,7 +34,7 @@ final class PieceViewTest: XCTestCase {
             let b = Piece(sizing: .fillContainer, content: .stitch(Stitch(
                 version: AnyHashable(AlwaysDifferent()),
                 content: {
-                    StitchContent(axis: .x, segments: [
+                    StitchContent(axis: .horizontal, segments: [
                         Piece(sizing: .fillContainer, content: .color(ColorPieceContent(size: CGSize(horizontal: 10, vertical: 10), color: .red))),
                         Piece(sizing: .fillContainer, content: .color(ColorPieceContent(size: CGSize(horizontal: 10, vertical: 10), color: .green))),
                         Piece(sizing: .fillContainer, content: .color(ColorPieceContent(size: CGSize(horizontal: 10, vertical: 10), color: .blue))),
@@ -42,7 +42,7 @@ final class PieceViewTest: XCTestCase {
                 })))
             a.backgroundColor = .black
             a.piece = b
-            a.frame = CGRect(x: 0, y: 0, horizontal: 100, vertical: 100)
+            a.frame = CGRect(horizontal: 0, vertical: 0, horizontal: 100, vertical: 100)
             assertSnapshot(matching: a, as: .image)
         }
         do {
@@ -50,10 +50,10 @@ final class PieceViewTest: XCTestCase {
             let b = Piece(sizing: .fillContainer, content: .stitch(Stitch(
                 version: AnyHashable(AlwaysDifferent()),
                 content: {
-                    StitchContent(axis: .x, segments: [
+                    StitchContent(axis: .horizontal, segments: [
                         Piece(sizing: .fitContent, content: .color(ColorPieceContent(size: CGSize(horizontal: 10, vertical: 10), color: .red))),
                         Piece(sizing: .fillContainer, content: .stitch(Stitch(version: AnyHashable(AlwaysDifferent()), content: {
-                            StitchContent(axis: .x, segments: [
+                            StitchContent(axis: .horizontal, segments: [
                                 Piece(sizing: .fillContainer, content: .space(.zero)),
                                 Piece(sizing: .fillContainer, content: .color(ColorPieceContent(size: CGSize(horizontal: 10, vertical: 10), color: .green))),
                                 Piece(sizing: .fillContainer, content: .color(ColorPieceContent(size: CGSize(horizontal: 10, vertical: 10), color: .blue))),
@@ -64,7 +64,7 @@ final class PieceViewTest: XCTestCase {
                 })))
             a.backgroundColor = .black
             a.piece = b
-            a.frame = CGRect(x: 0, y: 0, horizontal: 100, vertical: 100)
+            a.frame = CGRect(horizontal: 0, vertical: 0, horizontal: 100, vertical: 100)
             assertSnapshot(matching: a, as: .image)
         }
         do {
@@ -76,14 +76,14 @@ final class PieceViewTest: XCTestCase {
             ]})))
             a.backgroundColor = .black
             a.piece = b
-            a.frame = CGRect(x: 0, y: 0, horizontal: 100, vertical: 100)
+            a.frame = CGRect(horizontal: 0, vertical: 0, horizontal: 100, vertical: 100)
             assertSnapshot(matching: a, as: .image)
         }
     }
     
     func testSimplePieceUpdateInPlace() {
         let v = PieceView()
-        v.frame = CGRect(x: 0, y: 0, horizontal: 100, vertical: 100)
+        v.frame = CGRect(horizontal: 0, vertical: 0, horizontal: 100, vertical: 100)
         v.piece = color(.red)
         assertSnapshot(matching: v, as: .image)
         
@@ -92,7 +92,7 @@ final class PieceViewTest: XCTestCase {
     }
     func testStitchPieceUpdateInPlace() {
         let v = PieceView()
-        v.frame = CGRect(x: 0, y: 0, horizontal: 100, vertical: 100)
+        v.frame = CGRect(horizontal: 0, vertical: 0, horizontal: 100, vertical: 100)
         v.piece = divX {
             color(.red, horizontal: 10, vertical: 10)
             color(.blue)
@@ -107,7 +107,7 @@ final class PieceViewTest: XCTestCase {
     }
     func testStackPieceUpdateInPlace() {
         let v = PieceView()
-        v.frame = CGRect(x: 0, y: 0, horizontal: 100, vertical: 100)
+        v.frame = CGRect(horizontal: 0, vertical: 0, horizontal: 100, vertical: 100)
         v.piece = stackZ {
             color(.red)
             color(.green, horizontal: 20, vertical: 20)
