@@ -3,5 +3,13 @@
 xcodebuild build \
     -workspace Patchwork.xcworkspace \
     -scheme Patchwork \
+    -configuration Debug \
+    -sdk iphoneos \
+    -destination 'name=iPhone 13 Pro Max'
+
+xcodebuild build \
+    -workspace Patchwork.xcworkspace \
+    -scheme Patchwork \
+    -configuration Release \
     -sdk iphoneos \
     -destination 'name=iPhone 13 Pro Max'
