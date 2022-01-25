@@ -13,4 +13,9 @@ extension Piece {
         }
     }
 }
+#else
+extension Piece {
+    func assertValidity() {
+    }
+}
 #endif
