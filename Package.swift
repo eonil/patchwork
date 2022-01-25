@@ -16,6 +16,9 @@ let package = Package(
     ],
     targets: [
         .target(name: "Patchwork", dependencies: []),
-        .testTarget(name: "PatchworkTest", dependencies: ["Patchwork","SnapshotTesting"], exclude: ["__Snapshots__"]),
+        .testTarget(
+            name: "PatchworkTest",
+            dependencies: ["Patchwork","SnapshotTesting"],
+            exclude: ["__Snapshots__", "IndividualFeatures/__Snapshots__"]),
     ]
 )

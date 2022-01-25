@@ -1,3 +1,4 @@
+#if canImport(UIKit)
 import Foundation
 import UIKit
 
@@ -238,3 +239,4 @@ private extension Array where Element == UIView? {
         }
     }
 }
+#endif

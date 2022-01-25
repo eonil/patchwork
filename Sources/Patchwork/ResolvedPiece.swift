@@ -1,4 +1,5 @@
-import UIKit
+import Foundation
+import CoreGraphics
 
 struct ResolvedPiece {
     var sizing = PieceSizing(horizontal: .fitContent, vertical: .fitContent)

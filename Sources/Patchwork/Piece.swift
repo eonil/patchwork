@@ -1,4 +1,5 @@
-import UIKit
+import Foundation
+import CoreGraphics
 
 /// Defines a unit of stitching.
 ///
@@ -17,14 +18,17 @@ public struct Piece {
     public init(horizontal x:PieceSizingMode, vertical y:PieceSizingMode, content c: PieceContent) {
         sizing = PieceSizing(horizontal: x, vertical: y)
         content = c
+        assertValidity()
     }
     public init(sizing s:PieceSizingMode, content c: PieceContent) {
         sizing = PieceSizing(horizontal: s, vertical: s)
         content = c
+        assertValidity()
     }
     public init(sizing s:PieceSizing, content c: PieceContent) {
         sizing = s
         content = c
+        assertValidity()
     }
 }
 public struct PieceSizing: Equatable {
@@ -45,6 +49,9 @@ public enum PieceContent {
     case stitch(Stitch)
     case stack(Stack)
     case view(OSView)
+    /// A tex piece content.
+    /// You have to cover all characters with an explicit font object.
+    /// Otherwise, result undefined.
     case text(NSAttributedString)
     case image(OSImage)
     case color(ColorPieceContent)

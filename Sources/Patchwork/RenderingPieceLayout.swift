@@ -27,11 +27,12 @@ extension ResolvedPiece {
         return x.layout(in: bounds)[0]
     }
 }
+#if canImport(UIKit)
 extension ResolvedPieceContent {
-    var fittingSize: CGSize {
+    var pieceFittingSize: CGSize {
         switch self {
-        case let .stitch(x):    return x.fittingSize
-        case let .stack(x):     return x.fittingSize
+        case let .stitch(x):    return x.pieceFittingSize
+        case let .stack(x):     return x.pieceFittingSize
         case let .view(x):      return x.sizeThatFits(.zero)
         case let .text(x):      return x.size()
         case let .image(x):     return x.size
@@ -40,17 +41,33 @@ extension ResolvedPieceContent {
         }
     }
 }
+#endif
+#if canImport(AppKit)
+extension ResolvedPieceContent {
+    var pieceFittingSize: CGSize {
+        switch self {
+        case let .stitch(x):    return x.pieceFittingSize
+        case let .stack(x):     return x.pieceFittingSize
+        case let .view(x):      return x.fittingSize
+        case let .text(x):      return x.size()
+        case let .image(x):     return x.size
+        case let .color(x):     return x.size
+        case let .space(x):     return x
+        }
+    }
+}
+#endif
 extension ResolvedStitch {
-    var fittingSize: CGSize {
+    var pieceFittingSize: CGSize {
         switch axis {
-        case .horizontal:    return segments.lazy.map(\.content.fittingSize).reduce(.zero, composeX)
-        case .vertical:    return segments.lazy.map(\.content.fittingSize).reduce(.zero, composeY)
+        case .horizontal:    return segments.lazy.map(\.content.pieceFittingSize).reduce(.zero, composeX)
+        case .vertical:    return segments.lazy.map(\.content.pieceFittingSize).reduce(.zero, composeY)
         }
     }
 }
 extension ResolvedStack {
-    var fittingSize: CGSize {
-        slices.map(\.content.fittingSize).reduce(.zero, perAxisMax)
+    var pieceFittingSize: CGSize {
+        slices.map(\.content.pieceFittingSize).reduce(.zero, perAxisMax)
     }
 }
 
@@ -102,7 +119,7 @@ extension ResolvedStitch {
 /// - Flex segments with zero size will take equally portion of extra space.
 ///   - So, if there's any non-zero size segment, zero size segment won't be expanded.
 private func horizontalStitchSizes(of segments:[ResolvedPiece], in bounds:CGRect) -> [CGSize] {
-    var segmentSizes = segments.map(\.content.fittingSize)
+    var segmentSizes = segments.map(\.content.pieceFittingSize)
     let sumX = segmentSizes.lazy.map(\.width).reduce(0, +)
     let extraX = bounds.width - sumX
     let flexIndicesX = segments.enumerated().filter({ _,p in p.sizing.horizontal == .fillContainer }).map(\.offset)
@@ -131,7 +148,7 @@ private func horizontalStitchSizes(of segments:[ResolvedPiece], in bounds:CGRect
 }
 /// See `horizontalStitchSizes`.
 private func verticalStitchSizes(of segments:[ResolvedPiece], in bounds:CGRect) -> [CGSize] {
-    var segmentSizes = segments.map(\.content.fittingSize)
+    var segmentSizes = segments.map(\.content.pieceFittingSize)
     let sumY = segmentSizes.lazy.map(\.height).reduce(0, +)
     let extraY = bounds.height - sumY
     let flexIndicesY = segments.enumerated().filter({ _,p in p.sizing.vertical == .fillContainer }).map(\.offset)
@@ -194,7 +211,7 @@ private func verticalStitchingFrame(of sizes:[CGSize], in bounds:CGRect) -> [CGR
 extension ResolvedStack {
     func layout(in bounds:CGRect) -> [RenderingPieceLayout] {
         let frames = slices.map { p -> CGRect in
-            let fittingSize = p.content.fittingSize
+            let fittingSize = p.content.pieceFittingSize
             let w = p.sizing.horizontal == .fitContent ? fittingSize.width : bounds.width
             let h = p.sizing.vertical == .fitContent ? fittingSize.height : bounds.height
             let v = CGVector(dx: w, dy: h)

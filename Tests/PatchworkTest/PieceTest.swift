@@ -9,7 +9,7 @@ final class PieceTest: XCTestCase {
             let p = Piece(sizing: .fitContent, content: .space(.zero))
             let p1 = ResolvedPiece(from: p)
             XCTAssertEqual(p1.sizing, p.sizing)
-            XCTAssertEqual(p1.content.fittingSize, .zero)
+            XCTAssertEqual(p1.content.pieceFittingSize, .zero)
             let p2 = p1.layout(in: CGRect(x: 10, y: 20, width: 100, height: 200))
             XCTAssertEqual(p2.frame, CGRect(x: 10 + 50, y: 20 + 100, width: 0, height: 0))
         }
@@ -17,7 +17,7 @@ final class PieceTest: XCTestCase {
             let p = Piece(sizing: .fitContent, content: .space(CGSize(width: 10, height: 10)))
             let p1 = ResolvedPiece(from: p)
             XCTAssertEqual(p1.sizing, p.sizing)
-            XCTAssertEqual(p1.content.fittingSize, CGSize(width: 10, height: 10))
+            XCTAssertEqual(p1.content.pieceFittingSize, CGSize(width: 10, height: 10))
             let p2 = p1.layout(in: CGRect(x: 0, y: 0, width: 100, height: 100))
             XCTAssertEqual(p2.frame, CGRect(x: 45, y: 45, width: 10, height: 10))
         }
@@ -25,7 +25,7 @@ final class PieceTest: XCTestCase {
             let p = Piece(sizing: .fillContainer, content: .space(.zero))
             let p1 = ResolvedPiece(from: p)
             XCTAssertEqual(p1.sizing, p.sizing)
-            XCTAssertEqual(p1.content.fittingSize, .zero)
+            XCTAssertEqual(p1.content.pieceFittingSize, .zero)
             let p2 = p1.layout(in: CGRect(x: 10, y: 20, width: 100, height: 200))
             XCTAssertEqual(p2.frame, CGRect(x: 10, y: 20, width: 100, height: 200))
         }
@@ -34,7 +34,7 @@ final class PieceTest: XCTestCase {
             let p = Piece(sizing: .fitContent, content: .view(v))
             let p1 = ResolvedPiece(from: p)
             XCTAssertEqual(p1.sizing, p.sizing)
-            XCTAssertEqual(p1.content.fittingSize, CGSize(width: 20, height: 40))
+            XCTAssertEqual(p1.content.pieceFittingSize, CGSize(width: 20, height: 40))
             let p2 = p1.layout(in: CGRect(x: 10, y: 20, width: 100, height: 200))
             XCTAssertEqual(p2.frame, CGRect(x: 10+50-10, y: 20+100-20, width: 20, height: 40))
         }
