@@ -141,6 +141,11 @@ final class PieceFunctionTest: XCTestCase {
         a.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
         assertSnapshot(matching: a, as: .image)
     }
+    func testPassingPieceArrayAsContent() {
+        func testDiv(@ArrayBuilder<Piece> content: @escaping() -> [Piece]) -> Piece {
+            divX(content: { content() })
+        }
+    }
 }
 
 #endif

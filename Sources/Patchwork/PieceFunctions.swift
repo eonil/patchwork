@@ -58,6 +58,7 @@ public func space(width w:CGFloat, height h:CGFloat) -> Piece {
 @resultBuilder
 public struct ArrayBuilder<Element> {
     public static func buildBlock(_ components: Element...) -> [Element] { components }
+    public static func buildBlock(_ components: [Element]) -> [Element] { components }
 //    public static func buildBlock(_ components: [Element]...) -> [Element] { components.flatMap({ $0 }) }
 //    public static func buildBlock<A:ArrayConvertible>(_ components: A...) -> [Element] where A.Element == Element { components.flatMap(\.array) }
 //    public static func buildArray(_ components: [Element]) -> [Element] { components }
