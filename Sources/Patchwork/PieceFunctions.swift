@@ -17,11 +17,13 @@ public func stackZ(version x:AnyHashable = AlwaysDifferent(), horizontal h: Piec
     })))
 }
 
+/// It's unclear that this function is well-designed or not.
 public func wrapX(version v:AnyHashable = AlwaysDifferent(), @ArrayBuilder<Piece> content c:@escaping() -> [Piece]) -> Piece {
     Piece(sizing: .fitContent, content: .stitch(Stitch(version: v, content: {
         StitchContent(axis: .horizontal, segments: c())
     })))
 }
+/// It's unclear that this function is well-designed or not.
 public func wrapY(version v:AnyHashable = AlwaysDifferent(), @ArrayBuilder<Piece> content c:@escaping() -> [Piece]) -> Piece {
     Piece(sizing: .fitContent, content: .stitch(Stitch(version: v, content: {
         StitchContent(axis: .vertical, segments: c())
@@ -74,3 +76,4 @@ public struct ArrayBuilder<Element> {
 //extension Array: ArrayConvertible where Element == Piece {
 //    public var array: [Piece] { self }
 //}
+

@@ -102,6 +102,10 @@ public struct Stitch {
 public struct StitchContent {
     public var axis = StitchAxis.vertical
     public var segments = [Piece]()
+    public init(axis a:StitchAxis, segments xs:[Piece]) {
+        axis = a
+        segments = xs
+    }
 }
 public enum StitchAxis {
     case horizontal
