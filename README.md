@@ -2,7 +2,7 @@ Patchwork
 =========
 2021, Eonil.
 
-Minimal declarative layout library for UIKit.
+Minimal & 100% compatible declarative layout library for UIKit.
 
 [![CI](https://github.com/eonil/patchwork/actions/workflows/main.yml/badge.svg)](https://github.com/eonil/patchwork/actions/workflows/main.yml)
 
@@ -10,10 +10,10 @@ Minimal declarative layout library for UIKit.
 Why?
 ----
 SwiftUI is working, but still has numerous problems. Especially with layout errors.
-It also lacks too much features, I still need to depend on UIKit heavily.
+It also lacks too many features, I still need to depend on UIKit heavily.
 Apple is going to fix them eventualy, but I can't wait for it.
-I need something right now, that works flawlessly with UIKit and does not spit any layout error. 
-`Patchwork` is for that needs.
+I need something right now, that works flawlessly with UIKit and does not produce any AutoLayout error. 
+`Patchwork` is made to fill that needs.
 
 
 
@@ -32,7 +32,7 @@ Data Flow
 - You pass the `Piece` tree to a `PieceView`.
 - `PieceView` resolves `Piece` tree into `ResolvedPiece` tree.
   - This tree exists only to support version-based resolution skipping.
-  - `ResolvedPiece` also stored "fitting size".
+  - `ResolvedPiece` also stores "fitting size".
 - Once resolved subtree can be used for final layout/rendering.
 - On layout (e.g. frame changed), `PieceView` produces `RenderingPieceLayout` tree from `ResolvedPiece` tree.
 - `PieceView` updates in-place or rebuilds view subtree to render `RenderingPieceLayout` tree. 
@@ -41,9 +41,10 @@ Data Flow
 
 Design Choices
 --------------
-- A piece is static snapshot.
+- A piece is a static snapshot.
   - You need to re-render piece tree if thier content changed, so layout need to be changed.
-- Resolving piece tree into 
+- Same piece topology keeps same view tree.
+  - No unnecessary expensive view tree update.
 
 
 
