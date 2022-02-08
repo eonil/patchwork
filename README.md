@@ -45,6 +45,16 @@ Design Choices
   - You need to re-render piece tree if thier content changed, so layout need to be changed.
 - Same piece topology keeps same view tree.
   - No unnecessary expensive view tree update.
+  
+  
+  
+  
+Piece Functions
+---------------
+- SwiftUI-like declarative functions.
+- Fill-content by default.
+- You can override layout mode to fit-content by wrapping them with `fitX`, `fitY` or `fitXY` function.
+
 
 
 

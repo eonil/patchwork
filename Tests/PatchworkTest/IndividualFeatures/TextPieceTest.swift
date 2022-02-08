@@ -8,25 +8,29 @@ final class TextPieceTest: XCTestCase {
         let v = PieceView()
         v.frame = CGRect(x: 0, y: 0, width: 300, height: 100)
         v.backgroundColor = .white
-        v.piece = text("AAAA AAAA".attributedWithDefaultFont())
+        v.piece = fit {
+            text("AAAA AAAA".attributedWithDefaultFont())
+        }
         assertSnapshot(matching: v, as: .image)
     }
     func test3Rows() {
         let v = PieceView()
-        let p = divY {
-            divX {
-                text("AAAA AAAA".attributedWithDefaultFont())
-                text("AAAA AAAA".attributedWithDefaultFont())
-            }
-            space(width: 0, height: 4)
-            divX {
-                text("AAAA AAAA".attributedWithDefaultFont())
-                text("AAAA AAAA".attributedWithDefaultFont())
-            }
-            space(width: 0, height: 4)
-            divX {
-                text("AAAA AAAA".attributedWithDefaultFont())
-                text("AAAA AAAA".attributedWithDefaultFont())
+        let p = fitX {
+            divY {
+                divX {
+                    text("AAAA AAAA".attributedWithDefaultFont())
+                    text("AAAA AAAA".attributedWithDefaultFont())
+                }
+                fitSpace(width: 0, height: 4)
+                divX {
+                    text("AAAA AAAA".attributedWithDefaultFont())
+                    text("AAAA AAAA".attributedWithDefaultFont())
+                }
+                fitSpace(width: 0, height: 4)
+                divX {
+                    text("AAAA AAAA".attributedWithDefaultFont())
+                    text("AAAA AAAA".attributedWithDefaultFont())
+                }
             }
         }
         v.piece = p

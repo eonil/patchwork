@@ -17,13 +17,50 @@ public func stackZ(version x:AnyHashable = AlwaysDifferent(), horizontal h: Piec
     })))
 }
 
+public func fill(_ p:@escaping() -> Piece) -> Piece {
+    var z = p()
+    z.sizing.horizontal = .fillContainer
+    z.sizing.vertical = .fillContainer
+    return z
+}
+public func fillX(_ p:@escaping() -> Piece) -> Piece {
+    var z = p()
+    z.sizing.horizontal = .fillContainer
+    return z
+}
+public func fillY(_ p:@escaping() -> Piece) -> Piece {
+    var z = p()
+    z.sizing.vertical = .fillContainer
+    return z
+}
+
+/// Makes contained piece as fit-content mode.
+public func fit(_ p:@escaping() -> Piece) -> Piece {
+    var z = p()
+    z.sizing.horizontal = .fitContent
+    z.sizing.vertical = .fitContent
+    return z
+}
+public func fitX(_ p:@escaping() -> Piece) -> Piece {
+    var z = p()
+    z.sizing.horizontal = .fitContent
+    return z
+}
+public func fitY(_ p:@escaping() -> Piece) -> Piece {
+    var z = p()
+    z.sizing.vertical = .fitContent
+    return z
+}
+
 /// It's unclear that this function is well-designed or not.
+@available(*, deprecated)
 public func wrapX(version v:AnyHashable = AlwaysDifferent(), @ArrayBuilder<Piece> content c:@escaping() -> [Piece]) -> Piece {
     Piece(sizing: .fitContent, content: .stitch(Stitch(version: v, content: {
         StitchContent(axis: .horizontal, segments: c())
     })))
 }
 /// It's unclear that this function is well-designed or not.
+@available(*, deprecated)
 public func wrapY(version v:AnyHashable = AlwaysDifferent(), @ArrayBuilder<Piece> content c:@escaping() -> [Piece]) -> Piece {
     Piece(sizing: .fitContent, content: .stitch(Stitch(version: v, content: {
         StitchContent(axis: .vertical, segments: c())
@@ -31,30 +68,34 @@ public func wrapY(version v:AnyHashable = AlwaysDifferent(), @ArrayBuilder<Piece
 }
 
 public func view(_ x:OSView) -> Piece {
-    Piece(sizing: .fitContent, content: .view(x))
+    Piece(sizing: .fillContainer, content: .view(x))
 }
 public func text(_ x:NSAttributedString) -> Piece {
-    Piece(sizing: .fitContent, content: .text(x))
+    Piece(sizing: .fillContainer, content: .text(x))
 }
 public func image(_ x:OSImage) -> Piece {
-    Piece(sizing: .fitContent, content: .image(x))
+    Piece(sizing: .fillContainer, content: .image(x))
 }
 /// Flex sized color.
 public func color(_ x:OSColor) -> Piece {
     Piece(sizing: .fillContainer, content: .color(ColorPieceContent(size: .zero, color: x)))
 }
-/// Rigid sized color.
-public func color(_ x:OSColor, width w:CGFloat, height h:CGFloat) -> Piece {
-    Piece(sizing: .fitContent, content: .color(ColorPieceContent(size: CGSize(width: w, height: h), color: x)))
-}
 /// Flex sized space.
 public func space() -> Piece {
     Piece(sizing: .fillContainer, content: .space(.zero))
 }
+
+
+
+/// Rigid sized color.
+public func fitColor(_ x:OSColor, width w:CGFloat, height h:CGFloat) -> Piece {
+    Piece(sizing: .fitContent, content: .color(ColorPieceContent(size: CGSize(width: w, height: h), color: x)))
+}
 /// Rigid sized space.
-public func space(width w:CGFloat, height h:CGFloat) -> Piece {
+public func fitSpace(width w:CGFloat, height h:CGFloat) -> Piece {
     Piece(sizing: .fitContent, content: .space(CGSize(width: w, height: h)))
 }
+
 
 
 @resultBuilder
