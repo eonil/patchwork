@@ -81,6 +81,9 @@ private final class PieceStitchView: UIView {
         resolvedStitch = newResolvedStitch
         setNeedsLayout()
     }
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        resolvedStitch.pieceFittingSize
+    }
     override func layoutSubviews() {
         super.layoutSubviews()
         let layout = resolvedStitch.layout(in: bounds)

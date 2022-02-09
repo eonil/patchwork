@@ -120,6 +120,20 @@ final class PieceViewTest: XCTestCase {
         }
         assertSnapshot(matching: v, as: .image)
     }
+    func testSizeMeasuring1() {
+        let v = PieceView()
+        v.piece = fitSpace(width: 10, height: 20)
+        XCTAssertEqual(v.sizeThatFits(.zero), CGSize(width: 10, height: 20))
+    }
+    func testSizeMeasuring2() {
+        let v = PieceView()
+        v.piece = divX {
+            fitSpace(width: 10, height: 0)
+            fitSpace(width: 10, height: 0)
+            fitSpace(width: 10, height: 0)
+        }
+        XCTAssertEqual(v.sizeThatFits(.zero), CGSize(width: 30, height: 0))
+    }
 }
 
 #endif
