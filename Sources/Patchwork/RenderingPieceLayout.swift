@@ -60,8 +60,8 @@ extension ResolvedPieceContent {
 extension ResolvedStitch {
     var pieceFittingSize: CGSize {
         switch axis {
-        case .horizontal:    return segments.lazy.map(\.content.pieceFittingSize).reduce(.zero, composeX)
-        case .vertical:    return segments.lazy.map(\.content.pieceFittingSize).reduce(.zero, composeY)
+        case .horizontal:   return segments.lazy.map(\.content.pieceFittingSize).reduce(.zero, composeX)
+        case .vertical:     return segments.lazy.map(\.content.pieceFittingSize).reduce(.zero, composeY)
         }
     }
 }

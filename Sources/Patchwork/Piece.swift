@@ -60,9 +60,11 @@ public enum PieceContent {
 public struct ColorPieceContent {
     public var size: CGSize
     public var color: OSColor
-    public init(size s:CGSize, color c:OSColor) {
+    public var cornerRadius: CGFloat
+    public init(size s:CGSize, color c:OSColor, cornerRadius r:CGFloat = 0) {
         size = s
         color = c
+        cornerRadius = r
     }
 }
 

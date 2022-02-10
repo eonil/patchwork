@@ -134,6 +134,20 @@ final class PieceViewTest: XCTestCase {
         }
         XCTAssertEqual(v.sizeThatFits(.zero), CGSize(width: 30, height: 0))
     }
+    
+    func testColorPieceCornerRadius() {
+        let v = PieceView()
+        v.piece = divX {
+            Piece(
+                sizing: .fitContent,
+                content: .color(ColorPieceContent(
+                    size: CGSize(width: 20, height: 20),
+                    color: .red,
+                    cornerRadius: 5)))
+        }
+        v.sizeToFit()
+        assertSnapshot(matching: v, as: .image)
+    }
 }
 
 #endif

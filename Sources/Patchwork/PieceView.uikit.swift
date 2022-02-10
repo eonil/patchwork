@@ -206,13 +206,20 @@ private extension UIView {
         case let (.some(.color(_)), .color(bb)):
             assert(segmentViews.at(i) is UIView)
             guard let v = segmentViews.at(i) as? UIView else { return }
-            v.backgroundColor = bb.color
+            if v.backgroundColor != bb.color {
+                v.backgroundColor = bb.color
+            }
+            if v.layer.cornerRadius != bb.cornerRadius {
+                v.layer.cornerRadius = bb.cornerRadius
+            }
+            
         case let (_, .color(bb)):
             segmentViews[i]?.removeFromSuperview()
             let v = UIView()
             addSubview(v)
             segmentViews[i] = v
             v.backgroundColor = bb.color
+            v.layer.cornerRadius = bb.cornerRadius
 
         case (.some(.space), .space):
             assert(segmentViews.at(i) == .some(nil))
