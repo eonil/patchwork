@@ -43,9 +43,11 @@ Design Choices
 --------------
 - A piece is a static snapshot.
   - You need to re-render piece tree if thier content changed, so layout need to be changed.
+  - Layout will be cached for same input. Input includes layout target bounds.
+- Patchwork cannot track changes in embedded views. 
+  - You need to re-render same piece to measure embedded views again.
 - Same piece topology keeps same view tree.
   - No unnecessary expensive view tree update.
-  
   
   
   

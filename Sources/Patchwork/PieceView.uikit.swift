@@ -53,6 +53,10 @@ private final class PieceStitchView: UIView {
     private var segmentLayouts = [RenderingPieceLayout]()
     private var segmentViews = [UIView?]()
     
+    private var lastLayoutBounds = CGRect.zero
+    private var lastLayout = [RenderingPieceLayout]()
+    private var sourceRendered = false
+    
     override init(frame x: CGRect) {
         resolvedStitch = ResolvedStitch(
             version: AnyHashable(AlwaysDifferent()),
@@ -79,6 +83,7 @@ private final class PieceStitchView: UIView {
             updateContent(from: a?.content, to: b.content, at: i, in: &segmentViews)
         }
         resolvedStitch = newResolvedStitch
+        sourceRendered = false
         setNeedsLayout()
     }
     override func sizeThatFits(_ size: CGSize) -> CGSize {
@@ -86,12 +91,19 @@ private final class PieceStitchView: UIView {
     }
     override func layoutSubviews() {
         super.layoutSubviews()
+        let bounds = bounds
+        guard !sourceRendered || lastLayoutBounds != bounds else { return }
+        
         let layout = resolvedStitch.layout(in: bounds)
         assert(layout.count == segmentViews.count)
         
         for (layout,view) in zip(layout,segmentViews) {
             view?.frame = layout.frame
         }
+        
+        sourceRendered = true
+        lastLayoutBounds = bounds
+        lastLayout = layout
     }
 }
 
