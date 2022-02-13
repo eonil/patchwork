@@ -175,6 +175,7 @@ private extension UIView {
             if aa !== bb {
                 aa.removeFromSuperview()
                 addSubview(bb)
+                segmentViews[i] = bb
             }
         case let (_, .view(bb)):
             segmentViews[i]?.removeFromSuperview()
