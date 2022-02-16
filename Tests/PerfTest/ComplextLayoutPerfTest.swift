@@ -7,7 +7,7 @@ import SnapshotTesting
 final class ComplexLayoutPerfTest: XCTestCase {
     func test1() {
         let a = PieceView()
-        a.piece = makeDoublePiece(depth: 4)
+        a.piece = makeDoublePiece(depth: 4) /// 256 texts + branch pieces.
         a.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
         a.layoutIfNeeded()
         a.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
@@ -15,7 +15,6 @@ final class ComplexLayoutPerfTest: XCTestCase {
         /// Now 0.008 seconds/iteration.
         measure {
             a.layoutIfNeeded()
-            print(seed)
         }
         let traits = UITraitCollection(userInterfaceStyle: .light)
         assertSnapshot(matching: a, as: .image(traits: traits))

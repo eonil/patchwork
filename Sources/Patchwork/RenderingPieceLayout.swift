@@ -23,55 +23,24 @@ extension ResolvedPiece {
         let x = ResolvedStitch(
             version: AnyHashable(AlwaysDifferent()), 
             axis: .horizontal,
-            segments: [self])
+            segments: [self],
+            precomputedFittingSize: ResolvedStitch.computeFittingSize(axis: .horizontal, segments: [self]))
         return x.layout(in: bounds)[0]
     }
 }
-#if canImport(UIKit)
 extension ResolvedPieceContent {
     var pieceFittingSize: CGSize {
         switch self {
-        case let .stitch(x):    return x.pieceFittingSize
-        case let .stack(x):     return x.pieceFittingSize
-        case let .view(x):      return x.sizeThatFits(.zero)
-        case let .text(x):      return x.size()
+        case let .stitch(x):    return x.precomputedFittingSize
+        case let .stack(x):     return x.precomputedFittingSize
+        case let .view(x):      return x.precomputedFittingSize
+        case let .text(x):      return x.precomputedFittingSize
         case let .image(x):     return x.size
         case let .color(x):     return x.size
         case let .space(x):     return x
         }
     }
 }
-#endif
-#if canImport(AppKit)
-extension ResolvedPieceContent {
-    var pieceFittingSize: CGSize {
-        switch self {
-        case let .stitch(x):    return x.pieceFittingSize
-        case let .stack(x):     return x.pieceFittingSize
-        case let .view(x):      return x.fittingSize
-        case let .text(x):      return x.size()
-        case let .image(x):     return x.size
-        case let .color(x):     return x.size
-        case let .space(x):     return x
-        }
-    }
-}
-#endif
-extension ResolvedStitch {
-    var pieceFittingSize: CGSize {
-        switch axis {
-        case .horizontal:   return segments.lazy.map(\.content.pieceFittingSize).reduce(.zero, composeX)
-        case .vertical:     return segments.lazy.map(\.content.pieceFittingSize).reduce(.zero, composeY)
-        }
-    }
-}
-extension ResolvedStack {
-    var pieceFittingSize: CGSize {
-        slices.map(\.content.pieceFittingSize).reduce(.zero, perAxisMax)
-    }
-}
-
-
 
 extension ResolvedStitch {
     func layout(in bounds:CGRect) -> [RenderingPieceLayout] {
@@ -95,10 +64,10 @@ extension ResolvedStitch {
                 return RenderingPieceLayout(frame: f, content: .stack(x.layout(in: f.withOrigin(.zero))))
                 
             case let .view(x):
-                return RenderingPieceLayout(frame: f, content: .view(x))
+                return RenderingPieceLayout(frame: f, content: .view(x.view))
                 
             case let .text(x):
-                return RenderingPieceLayout(frame: f, content: .text(x))
+                return RenderingPieceLayout(frame: f, content: .text(x.text))
                 
             case let .image(x):
                 return RenderingPieceLayout(frame: f, content: .image(x))
@@ -226,10 +195,10 @@ extension ResolvedStack {
                 return RenderingPieceLayout(frame: f, content: .stack(x.layout(in: f.withOrigin(.zero))))
                 
             case let .view(x):
-                return RenderingPieceLayout(frame: f, content: .view(x))
+                return RenderingPieceLayout(frame: f, content: .view(x.view))
                 
             case let .text(x):
-                return RenderingPieceLayout(frame: f, content: .text(x))
+                return RenderingPieceLayout(frame: f, content: .text(x.text))
                 
             case let .image(x):
                 return RenderingPieceLayout(frame: f, content: .image(x))

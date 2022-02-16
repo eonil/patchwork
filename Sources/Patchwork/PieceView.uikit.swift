@@ -87,7 +87,7 @@ private final class PieceStitchView: UIView {
         setNeedsLayout()
     }
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        resolvedStitch.pieceFittingSize
+        resolvedStitch.precomputedFittingSize
     }
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -184,15 +184,15 @@ private extension UIView {
         
         case let (.some(.view(aa)), .view(bb)):
             assert(segmentViews.at(i) is UIView)
-            if aa !== bb {
-                aa.removeFromSuperview()
-                addSubview(bb)
-                segmentViews[i] = bb
+            if aa.view !== bb.view {
+                aa.view.removeFromSuperview()
+                addSubview(bb.view)
+                segmentViews[i] = bb.view
             }
         case let (_, .view(bb)):
             segmentViews[i]?.removeFromSuperview()
-            addSubview(bb)
-            segmentViews[i] = bb
+            addSubview(bb.view)
+            segmentViews[i] = bb.view
             
         case let (.some(.image(_)), .image(bb)):
             assert(segmentViews.at(i) is UIImageView)
@@ -208,13 +208,13 @@ private extension UIView {
         case let (.some(.text(_)), .text(bb)):
             assert(segmentViews.at(i) is UILabel)
             guard let v = segmentViews.at(i) as? UILabel else { return }
-            v.attributedText = bb
+            v.attributedText = bb.text
         case let (_, .text(bb)):
             segmentViews[i]?.removeFromSuperview()
             let v = UILabel()
             addSubview(v)
             segmentViews[i] = v
-            v.attributedText = bb
+            v.attributedText = bb.text
             
         case let (.some(.color(_)), .color(bb)):
             assert(segmentViews.at(i) is UIView)
