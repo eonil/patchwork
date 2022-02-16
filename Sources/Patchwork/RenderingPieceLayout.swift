@@ -38,6 +38,7 @@ extension ResolvedPieceContent {
         case let .image(x):     return x.size
         case let .color(x):     return x.size
         case let .space(x):     return x
+        case let .custom(x):    return x.precomputedFittingSize
         }
     }
 }
@@ -77,6 +78,9 @@ extension ResolvedStitch {
                 
             case .space:
                 return RenderingPieceLayout(frame: f, content: .space)
+                
+            case let .custom(x):
+                return RenderingPieceLayout(frame: f, content: .view(x.view))
             }
         })
     }
@@ -228,6 +232,9 @@ extension ResolvedStack {
                 
             case .space:
                 return RenderingPieceLayout(frame: f, content: .space)
+                
+            case let .custom(x):
+                return RenderingPieceLayout(frame: f, content: .view(x.view))
             }
         })
     }

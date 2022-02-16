@@ -1,5 +1,6 @@
 import Foundation
 import CoreGraphics
+import UIKit
 
 /// Defines a unit of stitching.
 ///
@@ -48,6 +49,7 @@ public enum PieceSizingMode: Equatable {
 public enum PieceContent {
     case stitch(Stitch)
     case stack(Stack)
+    /// Piece with a direct reference to a view instance.
     case view(OSView)
     /// A tex piece content.
     /// You have to cover all characters with an explicit font object.
@@ -56,7 +58,64 @@ public enum PieceContent {
     case image(OSImage)
     case color(ColorPieceContent)
     case space(CGSize)
+    case custom(CustomPieceContent)
+    static func view<View:OSView>(content:ViewPieceContent<View>) -> PieceContent {
+        .custom(CustomPieceContent(content))
+    }
+//    static func view<Content:ViewPieceContentProtocol>(content:Content) -> PieceContent {
+//        .custom(CustomPieceContent(content))
+//    }
 }
+
+/// A piece with a custom view class.
+/// - Patchwork creates and maintain desired view instance.
+/// - Therefore, this has no "view re-instantiation" issue.
+/// - View instances are continous, therefore no issue on animation.
+/// - Better performance by eliminating view re-instantiation.
+///
+/// Caveats
+/// ------
+/// - Please note that Patchwork determines target view class by statically bound `associatedtype`.
+/// - Always instantiate same type class. Do not instantiate different type classes contextually. Prohibited and result undefined. (debug-asserted)
+public struct ViewPieceContent<View:OSView> {
+    public var instantiate: () -> View
+    public var step: (View) -> Void
+    public init(instantiate k: @escaping () -> View, step x: @escaping (View) -> Void) {
+        instantiate = k
+        step = x
+    }
+}
+/// Type-erased version of `CustomViewContent`.
+/// - You are not supposed to use this type directly. Use `ViewPieceContent`.
+public struct CustomPieceContent {
+    var viewClass: OSView.Type
+    var instantiate: () -> OSView
+    var update: (OSView) -> Void
+    init<View:OSView>(_ content:ViewPieceContent<View>) {
+        viewClass = View.self
+        instantiate = { content.instantiate() }
+        update = { instance in content.step(instance as! View) }
+    }
+}
+
+//protocol ViewPieceContentProtocol {
+//    associatedtype View:OSView
+//    func instantiate() -> View
+//    func step(view:View)
+//}
+///// Type-erased version of `CustomViewContent`.
+///// - You are not supposed to use this type directly. Use `ViewPieceContent`.
+//public struct CustomPieceContent {
+//    var contentClass: Any.Type
+//    var instantiate: () -> OSView
+//    var update: (OSView) -> Void
+//    init<Content:ViewPieceContentProtocol>(_ content:Content) {
+//        contentClass = Content.self
+//        instantiate = { content.instantiate() }
+//        update = { instance in content.step(instance as! Content.View) }
+//    }
+//}
+
 public struct ColorPieceContent {
     public var size: CGSize
     public var color: OSColor

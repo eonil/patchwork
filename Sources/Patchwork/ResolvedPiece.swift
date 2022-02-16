@@ -13,6 +13,7 @@ enum ResolvedPieceContent {
     case image(OSImage)
     case color(ColorPieceContent)
     case space(CGSize)
+    case custom(ResolvedCustom)
 }
 struct ResolvedStitch {
     private(set) var version: AnyHashable
@@ -33,14 +34,18 @@ struct ResolvedText {
     let text: NSAttributedString
     let precomputedFittingSize: CGSize
 }
-
+struct ResolvedCustom {
+    let viewClass: OSView.Type
+    let view: OSView
+    let precomputedFittingSize: CGSize
+}
 
 
 
 extension ResolvedPiece {
-    init(from x:Piece) {
-        self = updated(with: x)
-    }
+//    init(from x:Piece) {
+//        self = updated(with: x)
+//    }
     func updated(with x:Piece) -> ResolvedPiece {
         let old = self
         let new = x
@@ -69,6 +74,34 @@ extension ResolvedPiece {
             
         case let (_, .space(b)):
             return ResolvedPiece(sizing: new.sizing, content: .space(b))
+        
+        case let (.custom(a), .custom(b)):
+            if a.viewClass == b.viewClass {
+                b.update(a.view)
+                return ResolvedPiece(sizing: new.sizing, content: .custom(ResolvedCustom(
+                    viewClass: a.viewClass,
+                    view: a.view,
+                    precomputedFittingSize: a.view.pieceFittingSize)))
+            }
+            else {
+                let v = b.instantiate()
+                Test.increment(path: \.customViewInstantiationCount)
+                assert(type(of: v) == b.viewClass, "type of instantiated view `\(type(of: v))` is not same with expected type `\(b.viewClass)`")
+                b.update(v)
+                return ResolvedPiece(sizing: new.sizing, content: .custom(ResolvedCustom(
+                    viewClass: b.viewClass,
+                    view: v,
+                    precomputedFittingSize: v.pieceFittingSize)))
+            }
+        case let (_, .custom(b)):
+            let v = b.instantiate()
+            Test.increment(path: \.customViewInstantiationCount)
+            assert(type(of: v) == b.viewClass, "type of instantiated view `\(type(of: v))` is not same with expected type `\(b.viewClass)`")
+            b.update(v)
+            return ResolvedPiece(sizing: new.sizing, content: .custom(ResolvedCustom(
+                viewClass: b.viewClass,
+                view: v,
+                precomputedFittingSize: v.pieceFittingSize)))
         }
     }
 }

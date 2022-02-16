@@ -8,6 +8,7 @@ import UIKit
 /// If you need to update their frames, you need to call `setNeedsLayout` here.
 open class PieceView: UIView {
     private let stitchView = PieceStitchView()
+    private var resolvedPiece = ResolvedPiece(sizing: .init(horizontal: .fitContent, vertical: .fitContent), content: .space(.zero))
     open var piece = Piece(sizing: .fillContainer, content: .space(.zero)) {
         didSet {
             if stitchView.superview == nil {
@@ -22,8 +23,8 @@ open class PieceView: UIView {
                             piece,
                         ])
                     })))
-            let resolved = ResolvedPiece(from: root)
-            guard case let .stitch(x) = resolved.content else { return }
+            resolvedPiece = resolvedPiece.updated(with: root)
+            guard case let .stitch(x) = resolvedPiece.content else { return }
             stitchView.render(x)
             setNeedsLayout()
         }
@@ -239,6 +240,21 @@ private extension UIView {
         case (_, .space):
             segmentViews[i]?.removeFromSuperview()
             segmentViews[i] = nil
+            
+        case let (.some(.custom(aa)), .custom(bb)):
+            assert(segmentViews.at(i) is UIView)
+            if aa.view !== bb.view {
+                aa.view.removeFromSuperview()
+                addSubview(bb.view)
+                segmentViews[i] = bb.view
+                Test.increment(path: \.customViewDeinstallationCount)
+                Test.increment(path: \.customViewInstallationCount)
+            }
+        case let (_, .custom(bb)):
+            segmentViews[i]?.removeFromSuperview()
+            addSubview(bb.view)
+            segmentViews[i] = bb.view
+            Test.increment(path: \.customViewInstallationCount)
         }
     }
 }

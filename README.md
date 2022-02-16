@@ -32,7 +32,7 @@ Data Flow
 - You pass the `Piece` tree to a `PieceView`.
 - `PieceView` resolves `Piece` tree into `ResolvedPiece` tree.
   - This tree exists only to support version-based resolution skipping.
-  - `ResolvedPiece` also stores "fitting size".
+  - `ResolvedPiece` also stores "fitting size" and extra cached data.
 - Once resolved subtree can be used for final layout/rendering.
 - On layout (e.g. frame changed), `PieceView` produces `RenderingPieceLayout` tree from `ResolvedPiece` tree.
 - `PieceView` updates in-place or rebuilds view subtree to render `RenderingPieceLayout` tree. 
