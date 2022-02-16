@@ -58,7 +58,7 @@ public enum PieceContent {
     case color(ColorPieceContent)
     case space(CGSize)
     case custom(CustomPieceContent)
-    static func view<View:OSView>(content:ViewPieceContent<View>) -> PieceContent {
+    public static func view<View:OSView>(content:ViewPieceContent<View>) -> PieceContent {
         .custom(CustomPieceContent(content))
     }
 //    static func view<Content:ViewPieceContentProtocol>(content:Content) -> PieceContent {
