@@ -89,10 +89,10 @@ extension ResolvedStitch {
 ///   - So, if there's any non-zero size segment, zero size segment won't be expanded.
 private func horizontalStitchSizes(of segments:[ResolvedPiece], in bounds:CGRect) -> [CGSize] {
     var segmentSizes = segments.map(\.content.pieceFittingSize)
-    let sumX = segmentSizes.lazy.map(\.width).reduce(0, +)
+    let sumX = segmentSizes.widthSum()
     let extraX = bounds.width - sumX
     let flexIndicesX = segments.enumerated().filter({ _,p in p.sizing.horizontal == .fillContainer }).map(\.offset)
-    let flexSumX = flexIndicesX.lazy.map({ i in segmentSizes[i].width }).reduce(0, +)
+    let flexSumX = segmentSizes.widthSum(at: flexIndicesX)
     if flexSumX == 0 {
         /// All zero sized segment. Distribute extra space to all flex segments evenly.
         let perSegmentExtraX = extraX / CGFloat(flexIndicesX.count)
@@ -118,10 +118,10 @@ private func horizontalStitchSizes(of segments:[ResolvedPiece], in bounds:CGRect
 /// See `horizontalStitchSizes`.
 private func verticalStitchSizes(of segments:[ResolvedPiece], in bounds:CGRect) -> [CGSize] {
     var segmentSizes = segments.map(\.content.pieceFittingSize)
-    let sumY = segmentSizes.lazy.map(\.height).reduce(0, +)
+    let sumY = segmentSizes.heightSum()
     let extraY = bounds.height - sumY
     let flexIndicesY = segments.enumerated().filter({ _,p in p.sizing.vertical == .fillContainer }).map(\.offset)
-    let flexSumY = flexIndicesY.lazy.map({ i in segmentSizes[i].height }).reduce(0, +)
+    let flexSumY = segmentSizes.heightSum(at: flexIndicesY)
     if flexSumY == 0 {
         /// All zero sized segment. Distribute extra space to all flex segments evenly.
         let perSegmentExtraY = extraY / CGFloat(flexIndicesY.count)
@@ -146,7 +146,7 @@ private func verticalStitchSizes(of segments:[ResolvedPiece], in bounds:CGRect) 
 }
 
 private func horizontalStitchingFrame(of sizes:[CGSize], in bounds:CGRect) -> [CGRect] {
-    let sumX = sizes.lazy.map(\.width).reduce(0, +)
+    let sumX = sizes.widthSum()
     var x = bounds.minX + (bounds.width - sumX) / 2
     let y = bounds.midY
     var frames = [CGRect]()
@@ -158,7 +158,7 @@ private func horizontalStitchingFrame(of sizes:[CGSize], in bounds:CGRect) -> [C
     return frames
 }
 private func verticalStitchingFrame(of sizes:[CGSize], in bounds:CGRect) -> [CGRect] {
-    let sumY = sizes.lazy.map(\.height).reduce(0, +)
+    let sumY = sizes.heightSum()
     var y = bounds.minY + (bounds.height - sumY) / 2
     let x = bounds.midX
     var frames = [CGRect]()
@@ -170,8 +170,28 @@ private func verticalStitchingFrame(of sizes:[CGSize], in bounds:CGRect) -> [CGR
     return frames
 }
 
-
-
+private extension Array where Element == CGSize {
+    func widthSum() -> CGFloat {
+        var z = 0 as CGFloat
+        for x in self { z += x.width }
+        return z
+    }
+    func widthSum(at indices:[Int]) -> CGFloat {
+        var z = 0 as CGFloat
+        for i in indices { z += self[i].width }
+        return z
+    }
+    func heightSum() -> CGFloat {
+        var z = 0 as CGFloat
+        for x in self { z += x.height }
+        return z
+    }
+    func heightSum(at indices:[Int]) -> CGFloat {
+        var z = 0 as CGFloat
+        for i in indices { z += self[i].height }
+        return z
+    }
+}
 
 
 
