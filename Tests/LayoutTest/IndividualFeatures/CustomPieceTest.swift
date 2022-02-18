@@ -46,12 +46,13 @@ private func myLabel(_ s:String, _ bg:UIColor) -> Piece {
             impl.frame = bounds
         }
     }
-    return Piece(horizontal: .fitContent, vertical: .fitContent, content: .view(content: ViewPieceContent<MyLabel>(
-        instantiate: { MyLabel() },
+    return Piece(horizontal: .fitContent, vertical: .fitContent, content: .view(
+        kind: ObjectIdentifier(MyLabel.self),
+        make: MyLabel.init,
         step: { label in
             label.impl.text = s
             label.backgroundColor = bg
-        })))
+        }))
 }
 
 #endif

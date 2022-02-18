@@ -35,7 +35,7 @@ struct ResolvedText {
     let precomputedFittingSize: CGSize
 }
 struct ResolvedCustom {
-    let viewClass: OSView.Type
+    let kind: AnyHashable
     let view: OSView
     let precomputedFittingSize: CGSize
 }
@@ -76,30 +76,30 @@ extension ResolvedPiece {
             return ResolvedPiece(sizing: new.sizing, content: .space(b))
         
         case let (.custom(a), .custom(b)):
-            if a.viewClass == b.viewClass {
+            if a.kind == b.kind {
                 b.update(a.view)
                 return ResolvedPiece(sizing: new.sizing, content: .custom(ResolvedCustom(
-                    viewClass: a.viewClass,
+                    kind: a.kind,
                     view: a.view,
                     precomputedFittingSize: a.view.pieceFittingSize)))
             }
             else {
                 let v = b.instantiate()
                 Test.increment(path: \.customViewInstantiationCount)
-                assert(type(of: v) == b.viewClass, "type of instantiated view `\(type(of: v))` is not same with expected type `\(b.viewClass)`")
+//                assert(type(of: v) == b.viewClass, "type of instantiated view `\(type(of: v))` is not same with expected type `\(b.viewClass)`")
                 b.update(v)
                 return ResolvedPiece(sizing: new.sizing, content: .custom(ResolvedCustom(
-                    viewClass: b.viewClass,
+                    kind: b.kind,
                     view: v,
                     precomputedFittingSize: v.pieceFittingSize)))
             }
         case let (_, .custom(b)):
             let v = b.instantiate()
             Test.increment(path: \.customViewInstantiationCount)
-            assert(type(of: v) == b.viewClass, "type of instantiated view `\(type(of: v))` is not same with expected type `\(b.viewClass)`")
+//            assert(type(of: v) == b.viewClass, "type of instantiated view `\(type(of: v))` is not same with expected type `\(b.viewClass)`")
             b.update(v)
             return ResolvedPiece(sizing: new.sizing, content: .custom(ResolvedCustom(
-                viewClass: b.viewClass,
+                kind: b.kind,
                 view: v,
                 precomputedFittingSize: v.pieceFittingSize)))
         }

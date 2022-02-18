@@ -58,62 +58,44 @@ public enum PieceContent {
     case color(ColorPieceContent)
     case space(CGSize)
     case custom(CustomPieceContent)
-    public static func view<View:OSView>(content:ViewPieceContent<View>) -> PieceContent {
-        .custom(CustomPieceContent(content))
+
+    /// A piece with a custom view class.
+    /// - Patchwork creates and maintain desired view instance.
+    /// - Patchwork will re-use existing view instance for same `kind` value.
+    /// - As Patchwork reuses same view instance, no on animation or performance issue arises.
+    ///
+    /// Type Detection
+    /// -----------
+    /// - We cannot detect final type of an Objective-C object statically. And `UIView`/`NSView` are all Objective-C objects.
+    /// - Patchwork needs reliable way to identify type of this view.
+    /// - This function accepts explicit `kind` parameter for it.
+    /// - You can use any hashable value for this.
+    /// - To use type information for `kind`, use `ObjectIdentifier(type(of: YourType.self))`.
+    ///
+    /// Caveats
+    /// ------
+    /// - It's your responsibility to return same type view instances for same `kind` value.
+    /// - Otherwise, result undefined.
+    ///
+    public static func view<View:OSView>(
+        kind:AnyHashable,
+        make:@escaping() -> View,
+        step:@escaping(View) -> Void) -> PieceContent
+    {
+        .custom(CustomPieceContent(
+            kind: kind,
+            instantiate: { make() },
+            update: { view in step(view as! View) }))
     }
-//    static func view<Content:ViewPieceContentProtocol>(content:Content) -> PieceContent {
-//        .custom(CustomPieceContent(content))
-//    }
 }
 
-/// A piece with a custom view class.
-/// - Patchwork creates and maintain desired view instance.
-/// - Therefore, this has no "view re-instantiation" issue.
-/// - View instances are continous, therefore no issue on animation.
-/// - Better performance by eliminating view re-instantiation.
-///
-/// Caveats
-/// ------
-/// - Please note that Patchwork determines target view class by statically bound `associatedtype`.
-/// - Always instantiate same type class. Do not instantiate different type classes contextually. Prohibited and result undefined. (debug-asserted)
-public struct ViewPieceContent<View:OSView> {
-    public var instantiate: () -> View
-    public var step: (View) -> Void
-    public init(instantiate k: @escaping () -> View, step x: @escaping (View) -> Void) {
-        instantiate = k
-        step = x
-    }
-}
 /// Type-erased version of `CustomViewContent`.
 /// - You are not supposed to use this type directly. Use `ViewPieceContent`.
 public struct CustomPieceContent {
-    var viewClass: OSView.Type
+    var kind: AnyHashable
     var instantiate: () -> OSView
     var update: (OSView) -> Void
-    init<View:OSView>(_ content:ViewPieceContent<View>) {
-        viewClass = View.self
-        instantiate = { content.instantiate() }
-        update = { instance in content.step(instance as! View) }
-    }
 }
-
-//protocol ViewPieceContentProtocol {
-//    associatedtype View:OSView
-//    func instantiate() -> View
-//    func step(view:View)
-//}
-///// Type-erased version of `CustomViewContent`.
-///// - You are not supposed to use this type directly. Use `ViewPieceContent`.
-//public struct CustomPieceContent {
-//    var contentClass: Any.Type
-//    var instantiate: () -> OSView
-//    var update: (OSView) -> Void
-//    init<Content:ViewPieceContentProtocol>(_ content:Content) {
-//        contentClass = Content.self
-//        instantiate = { content.instantiate() }
-//        update = { instance in content.step(instance as! Content.View) }
-//    }
-//}
 
 public struct ColorPieceContent {
     public var size: CGSize
