@@ -46,25 +46,25 @@ extension ResolvedPiece {
 //    init(from x:Piece) {
 //        self = updated(with: x)
 //    }
-    func updated(with x:Piece) -> ResolvedPiece {
+    func updated(with x:Piece, config f:PieceViewConfig) -> ResolvedPiece {
         let old = self
         let new = x
         switch (old.content, new.content) {
         case let (.stitch(a), .stitch(b)):
-            return ResolvedPiece(sizing: new.sizing, content: .stitch(a.updated(with: b)))
+            return ResolvedPiece(sizing: new.sizing, content: .stitch(a.updated(with: b, config: f)))
         case let (_, .stitch(b)):
-            return ResolvedPiece(sizing: new.sizing, content: .stitch(ResolvedStitch(from: b)))
+            return ResolvedPiece(sizing: new.sizing, content: .stitch(ResolvedStitch(from: b, config: f)))
             
         case let (.stack(a), .stack(b)):
-            return ResolvedPiece(sizing: new.sizing, content: .stack(a.updated(with: b)))
+            return ResolvedPiece(sizing: new.sizing, content: .stack(a.updated(with: b, config: f)))
         case let (_, .stack(b)):
-            return ResolvedPiece(sizing: new.sizing, content: .stack(ResolvedStack(from: b)))
+            return ResolvedPiece(sizing: new.sizing, content: .stack(ResolvedStack(from: b, config: f)))
             
         case let (_, .view(b)):
             return ResolvedPiece(sizing: new.sizing, content: .view(ResolvedView(view: b, precomputedFittingSize: b.pieceFittingSize)))
             
         case let (_, .text(b)):
-            return ResolvedPiece(sizing: new.sizing, content: .text(ResolvedText(text: b, precomputedFittingSize: b.size())))
+            return ResolvedPiece(sizing: new.sizing, content: .text(ResolvedText(text: b, precomputedFittingSize: f.textSizeCeiling ? b.size().ceiling : b.size())))
             
         case let (_, .image(b)):
             return ResolvedPiece(sizing: new.sizing, content: .image(b))
@@ -106,16 +106,16 @@ extension ResolvedPiece {
     }
 }
 extension ResolvedStitch {
-    init(from x:Stitch) {
+    init(from x:Stitch, config f:PieceViewConfig) {
         version = AnyHashable(AlwaysDifferent())
-        self = updated(with: x)
+        self = updated(with: x, config: f)
     }
-    func updated(with x:Stitch) -> ResolvedStitch {
+    func updated(with x:Stitch, config:PieceViewConfig) -> ResolvedStitch {
         guard version != x.version else { return self }
         let c = x.content()
         let segs = c.segments.enumerated().map({ i,p -> ResolvedPiece in
             let old = segments.indices.contains(i) ? segments[i] : ResolvedPiece()
-            let new = old.updated(with: p)
+            let new = old.updated(with: p, config: config)
             return new
         })
         return ResolvedStitch(
@@ -132,16 +132,16 @@ extension ResolvedStitch {
     }
 }
 extension ResolvedStack {
-    init(from x:Stack) {
+    init(from x:Stack, config f:PieceViewConfig) {
         version = AnyHashable(AlwaysDifferent())
-        self = updated(with: x)
+        self = updated(with: x, config: f)
     }
-    func updated(with x:Stack) -> ResolvedStack {
+    func updated(with x:Stack, config f: PieceViewConfig) -> ResolvedStack {
         guard version != x.version else { return self }
         let c = x.content()
         let ss = c.enumerated().map({ i,p -> ResolvedPiece in
             let old = slices.indices.contains(i) ? slices[i] : ResolvedPiece()
-            let new = old.updated(with: p)
+            let new = old.updated(with: p, config: f)
             return new
         })
         return ResolvedStack(

@@ -50,9 +50,10 @@ public enum PieceContent {
     case stack(Stack)
     /// Piece with a direct reference to a view instance.
     case view(OSView)
-    /// A tex piece content.
+    /// A text piece content.
     /// You have to cover all characters with an explicit font object.
     /// Otherwise, result undefined.
+    @available(*, deprecated, message: "single implementation cannot satisfy all needs. please define your own text rendering view")
     case text(NSAttributedString)
     case image(OSImage)
     case color(ColorPieceContent)

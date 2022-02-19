@@ -155,6 +155,10 @@ final class PieceFunctionTest: XCTestCase {
         a.piece = b
         a.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
         assertSnapshot(matching: a, as: .image)
+        
+        a.config.frameRounding = true
+        a.piece = b
+        assertSnapshot(matching: a, as: .image)
     }
     /// Stacking from top.
     func testSimpleForm2() {

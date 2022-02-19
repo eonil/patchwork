@@ -9,9 +9,23 @@ import UIKit
 open class PieceView: UIView {
     private let stitchView = PieceStitchView()
     private var resolvedPiece = ResolvedPiece(sizing: .init(horizontal: .fitContent, vertical: .fitContent), content: .space(.zero))
+    
+    /// Rendering configuration.
+    /// - Complexity: O(n) where n is number of view in this view tree.
+    /// - Note:
+    ///     Setting this property is very expensive as it invalidates all existing renderings.
+    ///     Call this only if absolutely needed.
+    public var config = PieceViewConfig.default {
+        didSet {
+            let x = piece
+            piece = x
+        }
+    }
+    
     open var piece = Piece(sizing: .fillContainer, content: .space(.zero)) {
         didSet {
             if stitchView.superview == nil {
+                stitchView.hostPieceView = Weak(self)
                 addSubview(stitchView)
             }
             let root = Piece(
@@ -23,7 +37,7 @@ open class PieceView: UIView {
                             piece,
                         ])
                     })))
-            resolvedPiece = resolvedPiece.updated(with: root)
+            resolvedPiece = resolvedPiece.updated(with: root, config: config)
             guard case let .stitch(x) = resolvedPiece.content else { return }
             stitchView.render(x)
             setNeedsLayout()
@@ -40,16 +54,34 @@ open class PieceView: UIView {
         sizeThatFits(.zero)
     }
 }
+public struct PieceViewConfig {
+    public var frameRounding = false
+    /// Enlarges text to fit point grid.
+    public var textSizeCeiling = false
+    
+    /// Global default value for piece view config.
+    /// - You can change this value. New value will be applied to all subsequenty created `PieceView` instances.
+    public static var `default` = PieceViewConfig() {
+        willSet { assert(Thread.isMainThread) }
+    }
+    public static var pointGridFitting: PieceViewConfig {
+        PieceViewConfig(
+            frameRounding: true,
+            textSizeCeiling: true)
+    }
+}
 
 
 
 
 
 
-
-
-
-private final class PieceStitchView: UIView {
+private protocol PieceContentViewProtocol: AnyObject {
+    var hostPieceView: Weak<PieceView> { get set }
+}
+private final class PieceStitchView: UIView, PieceContentViewProtocol {
+    var hostPieceView = Weak<PieceView>()
+    
     private var resolvedStitch: ResolvedStitch
     private var segmentLayouts = [RenderingPieceLayout]()
     private var segmentViews = [UIView?]()
@@ -68,6 +100,7 @@ private final class PieceStitchView: UIView {
     required init?(coder: NSCoder) {
         unsupported()
     }
+    
     func render(_ x:ResolvedStitch) {
         let oldResolvedStitch = resolvedStitch
         let newResolvedStitch = x
@@ -81,7 +114,7 @@ private final class PieceStitchView: UIView {
         for i in newResolvedStitch.segments.indices {
             let a = oldResolvedStitch.segments.at(i)
             let b = newResolvedStitch.segments[i]
-            updateContent(from: a?.content, to: b.content, at: i, in: &segmentViews)
+            updateContent(host: hostPieceView, from: a?.content, to: b.content, at: i, in: &segmentViews)
         }
         resolvedStitch = newResolvedStitch
         sourceRendered = false
@@ -99,7 +132,9 @@ private final class PieceStitchView: UIView {
         assert(layout.count == segmentViews.count)
         
         for (layout,view) in zip(layout,segmentViews) {
-            view?.frame = layout.frame
+            view?.frame = (hostPieceView.object?.config.frameRounding ?? false)
+                ? layout.frame.rounding
+                : layout.frame
         }
         
         sourceRendered = true
@@ -108,7 +143,9 @@ private final class PieceStitchView: UIView {
     }
 }
 
-private final class PieceStackView: UIView {
+private final class PieceStackView: UIView, PieceContentViewProtocol {
+    var hostPieceView = Weak<PieceView>()
+    
     private var resolvedStack: ResolvedStack
     private var sliceLayouts = [RenderingPieceLayout]()
     private var sliceViews = [UIView?]()
@@ -122,6 +159,7 @@ private final class PieceStackView: UIView {
     required init?(coder: NSCoder) {
         unsupported()
     }
+    
     func render(_ x:ResolvedStack) {
         let oldResolvedStack = resolvedStack
         let newResolvedStack = x
@@ -135,7 +173,7 @@ private final class PieceStackView: UIView {
         for i in newResolvedStack.slices.indices {
             let a = oldResolvedStack.slices.at(i)
             let b = newResolvedStack.slices[i]
-            updateContent(from: a?.content, to: b.content, at: i, in: &sliceViews)
+            updateContent(host: hostPieceView, from: a?.content, to: b.content, at: i, in: &sliceViews)
         }
         resolvedStack = newResolvedStack
         setNeedsLayout()
@@ -146,7 +184,9 @@ private final class PieceStackView: UIView {
         assert(layout.count == sliceViews.count)
         
         for (layout,view) in zip(layout,sliceViews) {
-            view?.frame = layout.frame
+            view?.frame = (hostPieceView.object?.config.frameRounding ?? false)
+                ? layout.frame.rounding
+                : layout.frame
         }
     }
 }
@@ -159,15 +199,17 @@ private final class PieceStackView: UIView {
 
 
 private extension UIView {
-    func updateContent(from old:ResolvedPieceContent?, to new:ResolvedPieceContent, at i:Int, in segmentViews: inout [UIView?]) {
+    func updateContent(host:Weak<PieceView>, from old:ResolvedPieceContent?, to new:ResolvedPieceContent, at i:Int, in segmentViews: inout [UIView?]) {
         switch (old, new) {
         case let (.some(.stitch(_)), .stitch(bb)):
             assert(segmentViews.at(i) is PieceStitchView)
             guard let v = segmentViews.at(i) as? PieceStitchView else { return }
+            v.hostPieceView = host
             v.render(bb)
         case let (_, .stitch(bb)):
             segmentViews[i]?.removeFromSuperview()
             let v = PieceStitchView()
+            v.hostPieceView = host
             addSubview(v)
             segmentViews[i] = v
             v.render(bb)
@@ -175,10 +217,12 @@ private extension UIView {
         case let (.some(.stack(_)), .stack(bb)):
             assert(segmentViews.at(i) is PieceStackView)
             guard let v = segmentViews.at(i) as? PieceStackView else { return }
+            v.hostPieceView = host
             v.render(bb)
         case let (_, .stack(bb)):
             segmentViews[i]?.removeFromSuperview()
             let v = PieceStackView()
+            v.hostPieceView = host
             addSubview(v)
             segmentViews[i] = v
             v.render(bb)

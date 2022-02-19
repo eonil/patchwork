@@ -7,7 +7,7 @@ final class PieceTest: XCTestCase {
     func testLeafResolutions() {
         do {
             let p = Piece(sizing: .fitContent, content: .space(.zero))
-            let p1 = ResolvedPiece().updated(with: p)
+            let p1 = ResolvedPiece().updated(with: p, config: .default)
             XCTAssertEqual(p1.sizing, p.sizing)
             XCTAssertEqual(p1.content.pieceFittingSize, .zero)
             let p2 = p1.layout(in: CGRect(x: 10, y: 20, width: 100, height: 200))
@@ -15,7 +15,7 @@ final class PieceTest: XCTestCase {
         }
         do {
             let p = Piece(sizing: .fitContent, content: .space(CGSize(width: 10, height: 10)))
-            let p1 = ResolvedPiece().updated(with: p)
+            let p1 = ResolvedPiece().updated(with: p, config: .default)
             XCTAssertEqual(p1.sizing, p.sizing)
             XCTAssertEqual(p1.content.pieceFittingSize, CGSize(width: 10, height: 10))
             let p2 = p1.layout(in: CGRect(x: 0, y: 0, width: 100, height: 100))
@@ -23,7 +23,7 @@ final class PieceTest: XCTestCase {
         }
         do {
             let p = Piece(sizing: .fillContainer, content: .space(.zero))
-            let p1 = ResolvedPiece().updated(with: p)
+            let p1 = ResolvedPiece().updated(with: p, config: .default)
             XCTAssertEqual(p1.sizing, p.sizing)
             XCTAssertEqual(p1.content.pieceFittingSize, .zero)
             let p2 = p1.layout(in: CGRect(x: 10, y: 20, width: 100, height: 200))
@@ -32,7 +32,7 @@ final class PieceTest: XCTestCase {
         do {
             let v = FixedSizedView(frame: CGRect(x: 0, y: 0, width: 20, height: 40))
             let p = Piece(sizing: .fitContent, content: .view(v))
-            let p1 = ResolvedPiece().updated(with: p)
+            let p1 = ResolvedPiece().updated(with: p, config: .default)
             XCTAssertEqual(p1.sizing, p.sizing)
             XCTAssertEqual(p1.content.pieceFittingSize, CGSize(width: 20, height: 40))
             let p2 = p1.layout(in: CGRect(x: 10, y: 20, width: 100, height: 200))
@@ -45,7 +45,7 @@ final class PieceTest: XCTestCase {
                 StitchContent(axis: .horizontal, segments: [
                 ])
             })))
-            let p1 = ResolvedPiece().updated(with: p)
+            let p1 = ResolvedPiece().updated(with: p, config: .default)
             let p2 = p1.layout(in: CGRect(x: 10, y: 20, width: 100, height: 200))
             XCTAssertEqual(p2.frame, CGRect(x: 10 + 50, y: 20 + 100, width: 0, height: 0))
         }
@@ -56,7 +56,7 @@ final class PieceTest: XCTestCase {
                     Piece(sizing: .fillContainer, content: .color(ColorPieceContent(size: .zero, color: .blue))),
                 ])
             })))
-            let p1 = ResolvedPiece().updated(with: p)
+            let p1 = ResolvedPiece().updated(with: p, config: .default)
             let p2 = p1.layout(in: CGRect(x: 0, y: 0, width: 100, height: 200))
             XCTAssertEqual(p2.frame, CGRect(x: 50 - 5, y: 100 - 10, width: 10, height: 20))
         }
@@ -67,7 +67,7 @@ final class PieceTest: XCTestCase {
                     Piece(sizing: .fillContainer, content: .color(ColorPieceContent(size: .zero, color: .blue))),
                 ])
             })))
-            let p1 = ResolvedPiece().updated(with: p)
+            let p1 = ResolvedPiece().updated(with: p, config: .default)
             let p2 = p1.layout(in: CGRect(x: 0, y: 0, width: 100, height: 200))
             XCTAssertEqual(p2.frame, CGRect(x: 0, y: 0, width: 100, height: 200))
             guard let x2 = p2.content.stitchSublayouts else { return XCTFail() }
@@ -87,7 +87,7 @@ final class PieceTest: XCTestCase {
                     }))),
                 ])
             })))
-            let p1 = ResolvedPiece().updated(with: p)
+            let p1 = ResolvedPiece().updated(with: p, config: .default)
             let p2 = p1.layout(in: CGRect(x: 0, y: 0, width: 100, height: 200))
             XCTAssertEqual(p2.frame, CGRect(x: 0, y: 0, width: 100, height: 200))
             guard let x2 = p2.content.stitchSublayouts else { return XCTFail() }
@@ -107,7 +107,7 @@ final class PieceTest: XCTestCase {
                 Piece(sizing: .fitContent, content: .color(ColorPieceContent(size: CGSize(width: 40, height: 40), color: .green))),
                 Piece(sizing: .fitContent, content: .color(ColorPieceContent(size: CGSize(width: 60, height: 60), color: .blue))),
             ]})))
-            let p1 = ResolvedPiece().updated(with: p)
+            let p1 = ResolvedPiece().updated(with: p, config: .default)
             let p2 = p1.layout(in: CGRect(x: 0, y: 0, width: 100, height: 100))
             XCTAssertEqual(p2.frame, CGRect(x: 50 - 30, y: 50 - 30, width: 60, height: 60))
             guard let x2 = p2.content.stackSublayouts else { return XCTFail() }

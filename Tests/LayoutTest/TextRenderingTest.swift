@@ -1,25 +1,27 @@
 #if canImport(UIKit)
-import UIKit
 import XCTest
 import SnapshotTesting
 @testable import Patchwork
 
-final class ComplexLayoutPerfTest: XCTestCase {
+
+final class TextRenderingTest: XCTestCase {
     func test1() {
         let a = PieceView()
         a.config = .pointGridFitting
         a.piece = makeDoublePiece(depth: 4) /// 256 texts + branch pieces.
         a.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
         a.layoutIfNeeded()
-
-        /// This has to be done in 1/60 (about 0.017) seconds.
-        /// Now 0.002 seconds/iteration.
-        measure {
-            a.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
-            a.layoutIfNeeded()
-        }
+        assertSnapshot(matching: a, as: .image)
+        a.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
+        a.layoutIfNeeded()
+        assertSnapshot(matching: a, as: .image)
     }
 }
+
+private final class FixedSizedView: UIView {
+    override func sizeThatFits(_ size: CGSize) -> CGSize { frame.size }
+}
+
 private var seed = 0
 private func makeDoublePiece(depth n:Int) -> Piece {
     assert(n >= 0)
@@ -72,5 +74,4 @@ private func makeAttributedText(_ s:String, _ c:UIColor) -> NSAttributedString {
         .foregroundColor: c,
     ])
 }
-
 #endif

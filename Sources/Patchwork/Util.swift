@@ -38,8 +38,14 @@ extension CGSize {
     func scaled(_ v:CGFloat) -> CGSize {
         CGSize(width: width * v, height: height * v)
     }
+    var ceiling: CGSize {
+        CGSize(width: ceil(width), height: ceil(height))
+    }
 }
 extension CGRect {
+    init(min:CGPoint, max:CGPoint) {
+        self = CGRect(x: min.x, y: min.y, width: max.x - min.x, height: max.y - min.y)
+    }
     func withOrigin(_ v:CGPoint) -> CGRect {
         CGRect(origin: v, size: size)
     }
@@ -75,7 +81,16 @@ extension CGRect {
     var midPoint: CGPoint {
         CGPoint(x: midX, y: midY)
     }
+    var rounding: CGRect {
+        CGRect(
+            min: CGPoint(x: round(minX), y: round(minY)),
+            max: CGPoint(x: round(maxX), y: round(maxY)))
+    }
 }
+func round(_ r:CGRect) -> CGRect {
+    r.rounding
+}
+
 extension CGVector {
     func scaled(_ v:CGFloat) -> CGVector {
         CGVector(dx: dx * v, dy: dy * v)
@@ -85,4 +100,8 @@ extension CGVector {
 func perAxisMax(_ a:CGSize, _ b:CGSize) -> CGSize {
     CGSize(width: max(a.width, b.width), height: max(a.height, b.height))
 }
+
+
+
+
 
