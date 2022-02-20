@@ -3,6 +3,16 @@
 xcodebuild test \
     -workspace Patchwork.xcworkspace \
     -scheme LayoutTest \
+    -sdk macos
+
+xcodebuild test \
+    -workspace Patchwork.xcworkspace \
+    -scheme PerfTest \
+    -sdk macos 
+
+xcodebuild test \
+    -workspace Patchwork.xcworkspace \
+    -scheme LayoutTest \
     -sdk iphoneos \
     -destination 'name=iPhone 13 Pro Max'
 
