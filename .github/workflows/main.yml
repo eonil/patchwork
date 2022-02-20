@@ -33,5 +33,5 @@ jobs:
 
       - name: Unit Test
         run: |
-          ./claen
+          ./clean
           ./test
