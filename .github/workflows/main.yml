@@ -16,7 +16,22 @@ jobs:
           xcodebuild -version
 
       - name: Build Test
-        run: ./build
+        run: |
+          ./clean
+          ./build
+
+  test:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Prep
+        run: |
+          sw_vers
+          xcodebuild -version
 
       - name: Unit Test
-        run: ./test
+        run: |
+          ./claen
+          ./test
