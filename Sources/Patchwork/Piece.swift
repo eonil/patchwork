@@ -78,6 +78,12 @@ public enum PieceContent {
     /// - It's your responsibility to return same type view instances for same `kind` value.
     /// - Otherwise, result undefined.
     ///
+    /// - Warning:
+    ///     Somehow, downcasting to `View` type doesn't work if `View` type is composition type such as `UIView & SomeProtocol`.
+    ///     I suspect Swift compiler bug, though the reason is unclear.
+    ///     Therefore, this cannot be used in user code.
+    ///
+    @available(*, deprecated, message: "doesn't work. use `.custom` directly and perform downcasting yourself")
     public static func view<View:OSView>(
         kind:AnyHashable,
         make:@escaping() -> View,
@@ -96,8 +102,12 @@ public struct CustomPieceContent {
     var kind: AnyHashable
     var instantiate: () -> OSView
     var update: (OSView) -> Void
+    public init(kind k: AnyHashable, instantiate m: @escaping () -> OSView, update x: @escaping (OSView) -> Void) {
+        kind = k
+        instantiate = m
+        update = x
+    }
 }
-
 public struct ColorPieceContent {
     public var size: CGSize
     public var color: OSColor
