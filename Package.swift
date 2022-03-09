@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "Patchwork",
     platforms: [
-        .iOS(.v13),
+        .iOS(.v14),
     ],
     products: [
         .library(name: "Patchwork", targets: ["Patchwork"]),
@@ -22,7 +22,6 @@ let package = Package(
             exclude: ["__Snapshots__", "IndividualFeatures/__Snapshots__"]),
         .testTarget(
             name: "PerfTest",
-            dependencies: ["Patchwork","SnapshotTesting"],
-            exclude: ["__Snapshots__"]),
+            dependencies: ["Patchwork","SnapshotTesting"]),
     ]
 )

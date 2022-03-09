@@ -7,20 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D71AEF8727D8B8E80064C7AD /* Book.swift in Sources */ = {isa = PBXBuildFile; fileRef = D71AEF8627D8B8E80064C7AD /* Book.swift */; };
+		D71AEF8927D8B96F0064C7AD /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = D71AEF8827D8B96F0064C7AD /* Layout.swift */; };
 		D789E24D2775674D0029E60F /* PhoneRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = D789E24C2775674D0029E60F /* PhoneRoot.swift */; };
 		D789E24F277567540029E60F /* MacRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = D789E24E277567540029E60F /* MacRoot.swift */; };
 		D7FAE4F02775639A00E7AF58 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D7FAE4EF2775639A00E7AF58 /* Assets.xcassets */; };
-		D7FAE4F32775639A00E7AF58 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D7FAE4F22775639A00E7AF58 /* Preview Assets.xcassets */; };
 		D7FAE4FB277563C500E7AF58 /* Patchwork in Frameworks */ = {isa = PBXBuildFile; productRef = D7FAE4FA277563C500E7AF58 /* Patchwork */; };
 		D7FAE4FD277563D800E7AF58 /* Bridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7FAE4FC277563D800E7AF58 /* Bridge.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D71AEF8627D8B8E80064C7AD /* Book.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Book.swift; sourceTree = "<group>"; };
+		D71AEF8827D8B96F0064C7AD /* Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
 		D789E24C2775674D0029E60F /* PhoneRoot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneRoot.swift; sourceTree = "<group>"; };
 		D789E24E277567540029E60F /* MacRoot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacRoot.swift; sourceTree = "<group>"; };
 		D7FAE4E82775639900E7AF58 /* PatchworkUISampleBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PatchworkUISampleBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7FAE4EF2775639A00E7AF58 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		D7FAE4F22775639A00E7AF58 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		D7FAE4FC277563D800E7AF58 /* Bridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bridge.swift; sourceTree = "<group>"; };
 		D7FAE4FE2775644E00E7AF58 /* PatchworkUISampleBook.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PatchworkUISampleBook.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -59,20 +61,13 @@
 			children = (
 				D7FAE4FE2775644E00E7AF58 /* PatchworkUISampleBook.entitlements */,
 				D7FAE4EF2775639A00E7AF58 /* Assets.xcassets */,
-				D7FAE4F12775639A00E7AF58 /* Preview Content */,
 				D7FAE4FC277563D800E7AF58 /* Bridge.swift */,
 				D789E24C2775674D0029E60F /* PhoneRoot.swift */,
 				D789E24E277567540029E60F /* MacRoot.swift */,
+				D71AEF8627D8B8E80064C7AD /* Book.swift */,
+				D71AEF8827D8B96F0064C7AD /* Layout.swift */,
 			);
 			path = PatchworkUISampleBook;
-			sourceTree = "<group>";
-		};
-		D7FAE4F12775639A00E7AF58 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				D7FAE4F22775639A00E7AF58 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		D7FAE4F9277563C500E7AF58 /* Frameworks */ = {
@@ -144,7 +139,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D7FAE4F32775639A00E7AF58 /* Preview Assets.xcassets in Resources */,
 				D7FAE4F02775639A00E7AF58 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -156,7 +150,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D71AEF8727D8B8E80064C7AD /* Book.swift in Sources */,
 				D789E24D2775674D0029E60F /* PhoneRoot.swift in Sources */,
+				D71AEF8927D8B96F0064C7AD /* Layout.swift in Sources */,
 				D789E24F277567540029E60F /* MacRoot.swift in Sources */,
 				D7FAE4FD277563D800E7AF58 /* Bridge.swift in Sources */,
 			);
@@ -291,7 +287,6 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 0;
-				DEVELOPMENT_ASSET_PATHS = "\"PatchworkUISampleBook/Preview Content\"";
 				DEVELOPMENT_TEAM = SYA75M63MP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -324,7 +319,6 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 0;
-				DEVELOPMENT_ASSET_PATHS = "\"PatchworkUISampleBook/Preview Content\"";
 				DEVELOPMENT_TEAM = SYA75M63MP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;

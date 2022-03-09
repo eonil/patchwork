@@ -105,3 +105,5 @@ func perAxisMax(_ a:CGSize, _ b:CGSize) -> CGSize {
 
 
 
+func noop() {}
+func noop<T>(_:T) {}
