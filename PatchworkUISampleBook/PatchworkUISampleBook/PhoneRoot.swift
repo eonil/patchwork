@@ -14,6 +14,17 @@ final class PhoneRoot {
     }
 }
 
+struct Book {
+    var pages = [
+        Page(name: "Sample 1", content: Sample1VC.self),
+        Page(name: "Sample 2", content: Sample2VC.self),
+    ]
+}
+struct Page {
+    var name: String
+    var content: UIViewController.Type
+}
+
 final class MenuVC: UIViewController, UITableViewDelegate {
     private let tableView = UITableView()
     private var dataSource = nil as DataSource?
@@ -74,6 +85,49 @@ final class Sample1VC: UIViewController {
         super.viewDidLayoutSubviews()
         pieceView.setNeedsLayout()
         pieceView.frame = view.bounds
+    }
+}
+
+final class Sample2VC: UIViewController {
+    private let pieceView = LazyPieceView()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .black
+        view.addSubview(pieceView)
+        let x = StitchY {
+            StitchX {
+                Color(.red, size: CGSize(width: 10, height: 10))
+                Text("Foo", alignment: .center, font: .monospacedDigitSystemFont(ofSize: 24, weight: .regular), color: .red)
+                Color(.red, size: CGSize(width: 10, height: 10))
+            }
+            StitchX {
+                Color(.red, size: CGSize(width: 10, height: 10))
+                Text("Bar", alignment: .center, font: .monospacedDigitSystemFont(ofSize: 24, weight: .regular), color: .red)
+                Color(.red, size: CGSize(width: 10, height: 10))
+            }
+            StitchX {
+                Color(.red, size: CGSize(width: 10, height: 10))
+                Text("Jar", alignment: .center, font: .monospacedDigitSystemFont(ofSize: 24, weight: .regular), color: .red)
+                Color(.red, size: CGSize(width: 10, height: 10))
+            }
+        }
+        pieceView.piece = x.piece
+        pieceView.delegate = { [weak self] note in
+            switch note {
+            case .needsResizing:
+                self?.view.setNeedsLayout()
+            }
+        }
+    }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        pieceView.frame = view.bounds
+        pieceView.layoutIfNeeded()
+        pieceView.setNeedsLayout()
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: []) { [weak self] in
+            self?.pieceView.layoutIfNeeded()
+        }
+
     }
 }
 
