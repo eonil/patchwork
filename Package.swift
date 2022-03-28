@@ -7,6 +7,7 @@ let package = Package(
     name: "Patchwork",
     platforms: [
         .iOS(.v15),
+        .macOS(.v12),
     ],
     products: [
         .library(name: "Patchwork", targets: ["Patchwork"]),
